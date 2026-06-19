@@ -7,6 +7,8 @@ import { setupPageCapture, capturePageSnapshot } from '../capture/pageSnapshot.j
 import { JsonlWriter } from '../storage/jsonlWriter.js';
 import { CurrentStateWriter } from '../storage/currentStateWriter.js';
 import chalk from 'chalk';
+import { spawn } from 'child_process';
+import { findChromiumBinary } from '../utils/chromeUtils.js';
 
 export async function observerLoop(chrome, session, port) {
   const consoleWriter = new JsonlWriter(`${session.path}/console.jsonl`);
@@ -125,35 +127,81 @@ export async function observerLoop(chrome, session, port) {
   };
 
   let chromeNotFoundWarningShown = false;
-  let successfulDiscoveries = 0;
+  let waitingStartTime = Date.now();
+  let chromeAutoLaunchAttempted = false;
 
   const discoveryLoop = async () => {
     try {
       const targets = await discoverTargets(port);
 
-      // Reset the warning flag if we successfully connect
-      if (targets && targets.length >= 0) {
-        successfulDiscoveries++;
-        if (successfulDiscoveries === 1) {
-          chromeNotFoundWarningShown = false; // Reset on first success
-        }
+      // Successfully connected - reset the warning
+      if (chromeNotFoundWarningShown) {
+        console.log(chalk.green('\n✓ Chrome connected!\n'));
+        chromeNotFoundWarningShown = false;
+      }
 
-        for (const target of targets) {
-          // Only attach to page targets, not workers or other types
-          if (target.type === 'page' && target.webSocketDebuggerUrl) {
-            await attachToTarget(target.id, target.url);
-          }
+      for (const target of targets) {
+        // Only attach to page targets, not workers or other types
+        if (target.type === 'page' && target.webSocketDebuggerUrl) {
+          await attachToTarget(target.id, target.url);
         }
       }
     } catch (err) {
-      // Show helpful message on first error or periodically
-      if (!chromeNotFoundWarningShown || successfulDiscoveries === 0) {
+      // Show helpful message only on first error
+      if (!chromeNotFoundWarningShown) {
         chromeNotFoundWarningShown = true;
-        console.error(chalk.yellow('\n⚠️  Chrome is not responding on port ' + port));
-        console.error(chalk.yellow('Make sure Chrome is running with debugging enabled:\n'));
-        console.error(chalk.gray('/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome \\'));
-        console.error(chalk.gray('  --remote-debugging-port=' + port + '\n'));
-        console.error(chalk.yellow('Waiting for Chrome to connect...\n'));
+        waitingStartTime = Date.now();
+        console.log(chalk.yellow('\n⚠️  Chrome is not responding on port ' + port));
+        console.log(chalk.yellow('Make sure Chrome is running with debugging enabled:\n'));
+        console.log(chalk.gray('/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome \\'));
+        console.log(chalk.gray('  --remote-debugging-port=' + port + '\n'));
+        console.log(chalk.yellow('Waiting for Chrome to connect...\n'));
+      } else {
+        // After 3 seconds, auto-launch Chrome
+        const elapsed = Date.now() - waitingStartTime;
+        if (elapsed > 3000 && !chromeAutoLaunchAttempted) {
+          chromeAutoLaunchAttempted = true;
+          const chromeBinary = findChromiumBinary();
+
+          if (chromeBinary) {
+            console.log(chalk.cyan('\nLaunching Chrome with debugging enabled...\n'));
+            try {
+              const child = spawn(chromeBinary, [
+                `--remote-debugging-port=${port}`,
+                '--no-sandbox'
+              ], {
+                stdio: 'pipe',
+                detached: true
+              });
+
+              child.stdout?.on('data', (data) => {
+                console.log(chalk.dim('[Chrome] ' + data.toString().trim()));
+              });
+
+              child.stderr?.on('data', (data) => {
+                console.log(chalk.dim('[Chrome stderr] ' + data.toString().trim()));
+              });
+
+              child.unref();
+
+              console.log(chalk.green('✓ Chrome is starting...\n'));
+              console.log(chalk.yellow('Waiting for Chrome to open port ' + port + '...'));
+              console.log(chalk.gray('(This usually takes 10-20 seconds)\n'));
+            } catch (launchErr) {
+              console.error(chalk.red('Failed to launch Chrome: ' + launchErr.message));
+              console.log(chalk.yellow('\nYou can still start Chrome manually with:\n'));
+              console.log(chalk.gray(chromeBinary + ' \\'));
+              console.log(chalk.gray(`  --remote-debugging-port=${port}\n`));
+            }
+          } else {
+            console.error(chalk.red('\n❌ Chrome not found. Please install Chrome or Chromium.'));
+            process.exit(1);
+          }
+        } else if (elapsed > 15000 && chromeAutoLaunchAttempted) {
+          // Show reminder message every 15 seconds after auto-launch
+          console.log(chalk.yellow('⏳ Chrome is starting up... (still waiting for port ' + port + ')'));
+          waitingStartTime = Date.now();
+        }
       }
     }
 

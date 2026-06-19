@@ -8,7 +8,9 @@
     "devtrace": "./bin/devtrace"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test-integration.js",
+    "lint": "echo \"Linting not configured yet\"",
+    "prepublishOnly": "npm run test"
   },
   "keywords": [
     "chrome",

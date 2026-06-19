@@ -5,9 +5,21 @@ import { observerLoop } from '../loop/observerLoop.js';
 import chalk from 'chalk';
 import { checkPort, findFreePort, killProcessOnPort } from '../utils/portUtils.js';
 
+function validatePort(port, name) {
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    console.error(chalk.red(`Invalid ${name}: ${port}. Port must be between 1 and 65535.`));
+    process.exit(1);
+  }
+  return port;
+}
+
 export async function startCommand(args) {
   let port = parseInt(args[0]) || 9222;
   let apiPort = parseInt(args[1]) || 3333;
+
+  validatePort(port, 'Chrome DevTools port');
+  validatePort(apiPort, 'API port');
+
   const autoPort = args.includes('--auto-port');
   const force = args.includes('--force');
   // Default to existing Chrome, use --new to launch a fresh instance
@@ -99,6 +111,9 @@ export async function startCommand(args) {
   const session = sessionManager.createSession();
   console.log(chalk.blue(`Session: ${session.id}`));
   console.log(chalk.blue(`Storage: ${session.path}\n`));
+
+  // Cleanup old sessions (keep last 50)
+  sessionManager.cleanupOldSessions(50);
 
   process.on('SIGINT', () => {
     console.log(chalk.yellow('\n\nShutting down...\n'));

@@ -69,6 +69,21 @@ class SessionManager {
       .sort()
       .reverse();
   }
+
+  cleanupOldSessions(maxSessions = 50) {
+    const sessions = this.listSessions();
+    if (sessions.length > maxSessions) {
+      const toDelete = sessions.slice(maxSessions);
+      for (const sessionId of toDelete) {
+        const sessionPath = path.join(sessionsDir, sessionId);
+        try {
+          fs.rmSync(sessionPath, { recursive: true, force: true });
+        } catch (err) {
+          console.warn(`Failed to delete session ${sessionId}:`, err.message);
+        }
+      }
+    }
+  }
 }
 
 export const sessionManager = new SessionManager();

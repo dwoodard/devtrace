@@ -1,8 +1,21 @@
 import { startCommand } from './start.js';
+import { stopCommand } from './stop.js';
 import { openCommand } from './open.js';
 import { inspectCommand } from './inspect.js';
 import { tailCommand } from './tail.js';
 import { skillCommand } from './skill.js';
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
 
 const command = process.argv[2];
 const args = process.argv.slice(3);
@@ -12,6 +25,9 @@ const args = process.argv.slice(3);
     switch (command) {
       case 'start':
         await startCommand(args);
+        break;
+      case 'stop':
+        await stopCommand(args);
         break;
       case 'open':
         await openCommand(args);
@@ -51,6 +67,8 @@ Usage:
   devtrace start 9222 3333    Use custom ports
   devtrace start --force      Kill existing processes and restart
   devtrace start --auto-port  Auto-detect free ports
+  devtrace stop               Stop the running DevTrace service
+  devtrace stop 9222 3333     Stop with custom ports
   devtrace open              Open the latest session in a browser
   devtrace inspect latest    Inspect the latest session state
   devtrace tail console      Follow console logs in real-time
@@ -74,5 +92,7 @@ Examples:
   devtrace start 9223 3334          # Custom Chrome and API ports
   devtrace start --force            # Kill existing processes and restart
   devtrace start --auto-port        # Auto-find free ports
+  devtrace stop                     # Stop the running DevTrace service
+  devtrace stop 9223 3334           # Stop with custom ports
   `);
 }

@@ -18,7 +18,7 @@ export async function checkPort(port) {
       resolve(true);
     });
 
-    server.listen(port, '127.0.0.1');
+    server.listen(port);
   });
 }
 
@@ -35,16 +35,21 @@ export async function findFreePort(startPort = 3333) {
 
 export async function killProcessOnPort(port) {
   try {
-    // Get the process using this port
+    // Get all processes using this port, handling multiple PIDs
     const pidCommand = `lsof -ti :${port}`;
-    const pid = execSync(pidCommand, { encoding: 'utf-8' }).trim();
+    const output = execSync(pidCommand, { encoding: 'utf-8' }).trim();
 
-    if (pid) {
-      // Kill the process
-      execSync(`kill -9 ${pid}`, { stdio: 'ignore' });
-      // Wait a bit for cleanup
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return true;
+    if (output) {
+      const pids = output.split('\n').filter(p => p);
+      if (pids.length > 0) {
+        // Kill all processes, using separate commands for robustness
+        for (const pid of pids) {
+          execSync(`kill -9 ${pid}`, { stdio: 'ignore' });
+        }
+        // Wait a bit for cleanup
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        return true;
+      }
     }
     return false;
   } catch (err) {

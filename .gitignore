@@ -4,7 +4,6 @@ package-lock.json
 
 # Runtime data
 sessions/*
-!sessions/.gitkeep
 
 # Chrome profile
 .chrome-profile/
@@ -27,3 +26,7 @@ npm-debug.log*
 
 # IDE
 .editorconfig
+
+.chrome-profile/*
+
+sessions/*
