@@ -1,0 +1,61 @@
+
+DevTools listening on ws://127.0.0.1:9222/devtools/browser/55bed90f-3c1a-48f0-a8f5-b55661da0cd0
+Trying to load the allocator multiple times. This is *not* supported.
+[22479:10324618:0619/094231.553504:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: PHONE_REGISTRATION_ERROR
+[22527:10325392:0619/094246.995844:VERBOSE1:chrome/updater/updater.cc:374] Version: 150.0.7863.0, opt, ARM_64, command line: /Users/dustin/Library/Application Support/Google/GoogleUpdater/150.0.7863.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --wake-all --enable-logging --vmodule=*/components/update_client/*=2,*/chrome/enterprise_companion/*=2,*/chrome/updater/*=2
+[22527:10325392:0619/094246.995975:VERBOSE1:chrome/updater/updater.cc:377] OS version: 26.5.1, arch: arm64, System uptime (seconds): 582186, parent pid: 22479
+[22527:10325392:0619/094246.997535:VERBOSE1:chrome/updater/updater.cc:382] Available disk space in install directory (/Users/dustin/Library/Application Support/Google/GoogleUpdater): 62533275648B (58.239GiB) / 994662584320B (926.352GiB)
+[22527:10325392:0619/094246.997545:VERBOSE1:chrome/updater/updater.cc:386] Available disk space in temporary directory (/var/folders/v6/35vzjzv578z2myvfnhj68tp80000gn/T/): 62533275648B (58.239GiB) / 994662584320B (926.352GiB)
+[22527:10325392:0619/094246.997586:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS START event to the history log
+[22529:10325396:0619/094247.003026:VERBOSE1:chrome/updater/updater.cc:374] Version: 150.0.7863.0, opt, ARM_64, command line: /Users/dustin/Library/Application Support/Google/GoogleUpdater/150.0.7863.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --crash-handler --database=/Users/dustin/Library/Application Support/Google/GoogleUpdater/150.0.7863.0/Crashpad --url=https://clients2.google.com/cr/report --annotation=prod=Update4 --annotation=ver=150.0.7863.0 --handshake-fd=6 --enable-logging --vmodule=*/components/update_client/*=2,*/chrome/enterprise_companion/*=2,*/chrome/updater/*=2
+[22529:10325396:0619/094247.003151:VERBOSE1:chrome/updater/updater.cc:377] OS version: 26.5.1, arch: arm64, System uptime (seconds): 582186, parent pid: 1
+[22529:10325396:0619/094247.004729:VERBOSE1:chrome/updater/updater.cc:382] Available disk space in install directory (/Users/dustin/Library/Application Support/Google/GoogleUpdater): 62533271552B (58.239GiB) / 994662584320B (926.352GiB)
+[22529:10325396:0619/094247.004742:VERBOSE1:chrome/updater/updater.cc:386] Available disk space in temporary directory (/var/folders/v6/35vzjzv578z2myvfnhj68tp80000gn/T/): 62533271552B (58.239GiB) / 994662584320B (926.352GiB)
+[22529:10325396:0619/094247.004793:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS START event to the history log
+[22527:10325392:0619/094247.005115:VERBOSE1:chrome/updater/crash_reporter.cc:124] Crash handler launched and ready.
+[22527:10325392:0619/094247.005613:VERBOSE1:chrome/updater/crash_client.cc:108] Found 0 completed crash reports
+[22527:10325392:0619/094247.005674:VERBOSE1:chrome/updater/crash_client.cc:132] Found 0 pending crash reports
+[22527:10325392:0619/094247.005732:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/dustin/Library/Application Support/Google/Chrome Dev/Crashpad/settings.dat: No such file or directory (2)
+[22527:10325392:0619/094247.005745:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/dustin/Library/Application Support/Google/RLZ/Crashpad/settings.dat: No such file or directory (2)
+[22527:10325392:0619/094247.005752:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/dustin/Library/Application Support/Google/Chrome Beta/Crashpad/settings.dat: No such file or directory (2)
+[22527:10325392:0619/094247.005784:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/dustin/Library/Application Support/Google/Chrome Canary/Crashpad/settings.dat: No such file or directory (2)
+[22527:10325392:0619/094247.005794:VERBOSE1:chrome/updater/updater.cc:105] Crash reporting initialized.
+[22527:10325404:0619/094247.005999:VERBOSE1:chrome/updater/app/app_wakeall.cc:58] Launching `/Users/dustin/Library/Application Support/Google/GoogleUpdater/150.0.7863.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --wake`
+[22530:10325408:0619/094247.010741:VERBOSE1:chrome/updater/updater.cc:374] Version: 150.0.7863.0, opt, ARM_64, command line: /Users/dustin/Library/Application Support/Google/GoogleUpdater/150.0.7863.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --wake --enable-logging --vmodule=*/components/update_client/*=2,*/chrome/enterprise_companion/*=2,*/chrome/updater/*=2
+[22530:10325408:0619/094247.010847:VERBOSE1:chrome/updater/updater.cc:377] OS version: 26.5.1, arch: arm64, System uptime (seconds): 582186, parent pid: 22527
+[22530:10325408:0619/094247.012150:VERBOSE1:chrome/updater/updater.cc:382] Available disk space in install directory (/Users/dustin/Library/Application Support/Google/GoogleUpdater): 62533267456B (58.239GiB) / 994662584320B (926.352GiB)
+[22530:10325408:0619/094247.012159:VERBOSE1:chrome/updater/updater.cc:386] Available disk space in temporary directory (/var/folders/v6/35vzjzv578z2myvfnhj68tp80000gn/T/): 62533267456B (58.239GiB) / 994662584320B (926.352GiB)
+[22530:10325408:0619/094247.012192:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS START event to the history log
+[22532:10325412:0619/094247.017382:VERBOSE1:chrome/updater/updater.cc:374] Version: 150.0.7863.0, opt, ARM_64, command line: /Users/dustin/Library/Application Support/Google/GoogleUpdater/150.0.7863.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --crash-handler --database=/Users/dustin/Library/Application Support/Google/GoogleUpdater/150.0.7863.0/Crashpad --url=https://clients2.google.com/cr/report --annotation=prod=Update4 --annotation=ver=150.0.7863.0 --handshake-fd=6 --enable-logging --vmodule=*/components/update_client/*=2,*/chrome/enterprise_companion/*=2,*/chrome/updater/*=2
+[22532:10325412:0619/094247.017500:VERBOSE1:chrome/updater/updater.cc:377] OS version: 26.5.1, arch: arm64, System uptime (seconds): 582186, parent pid: 1
+[22532:10325412:0619/094247.018726:VERBOSE1:chrome/updater/updater.cc:382] Available disk space in install directory (/Users/dustin/Library/Application Support/Google/GoogleUpdater): 62533267456B (58.239GiB) / 994662584320B (926.352GiB)
+[22532:10325412:0619/094247.018735:VERBOSE1:chrome/updater/updater.cc:386] Available disk space in temporary directory (/var/folders/v6/35vzjzv578z2myvfnhj68tp80000gn/T/): 62533267456B (58.239GiB) / 994662584320B (926.352GiB)
+[22532:10325412:0619/094247.018771:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS START event to the history log
+[22530:10325408:0619/094247.019055:VERBOSE1:chrome/updater/crash_reporter.cc:124] Crash handler launched and ready.
+[22530:10325408:0619/094247.019516:VERBOSE1:chrome/updater/crash_client.cc:108] Found 0 completed crash reports
+[22530:10325408:0619/094247.019574:VERBOSE1:chrome/updater/crash_client.cc:132] Found 0 pending crash reports
+[22530:10325408:0619/094247.019628:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/dustin/Library/Application Support/Google/Chrome Dev/Crashpad/settings.dat: No such file or directory (2)
+[22530:10325408:0619/094247.019636:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/dustin/Library/Application Support/Google/RLZ/Crashpad/settings.dat: No such file or directory (2)
+[22530:10325408:0619/094247.019641:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/dustin/Library/Application Support/Google/Chrome Beta/Crashpad/settings.dat: No such file or directory (2)
+[22530:10325408:0619/094247.019669:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /Users/dustin/Library/Application Support/Google/Chrome Canary/Crashpad/settings.dat: No such file or directory (2)
+[22530:10325408:0619/094247.019677:VERBOSE1:chrome/updater/updater.cc:105] Crash reporting initialized.
+[22530:10325408:0619/094247.019778:VERBOSE1:chrome/updater/ipc/update_service_internal_proxy_mojo.cc:61] Run
+[22479:10324618:0619/094258.589755:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[22530:10325408:0619/094302.325644:VERBOSE1:chrome/updater/app/app.cc:52] Shutdown: 0
+[22530:10325408:0619/094302.326093:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS END event to the history log
+[22530:10325408:0619/094302.326126:VERBOSE1:chrome/updater/updater.cc:419] UpdaterMain (--wake) returned 0.
+[22527:10325404:0619/094302.502035:VERBOSE1:chrome/updater/app/app_wakeall.cc:68] `/Users/dustin/Library/Application Support/Google/GoogleUpdater/150.0.7863.0/GoogleUpdater.app/Contents/MacOS/GoogleUpdater --wake` exited 0
+[22527:10325392:0619/094302.502309:VERBOSE1:chrome/updater/app/app.cc:52] Shutdown: 0
+[22527:10325392:0619/094302.502981:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS END event to the history log
+[22527:10325392:0619/094302.503036:VERBOSE1:chrome/updater/updater.cc:419] UpdaterMain (--wake-all) returned 0.
+[22532:10325412:0619/094312.338115:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS END event to the history log
+[22532:10325412:0619/094312.338155:VERBOSE1:chrome/updater/updater.cc:419] UpdaterMain (--crash-handler) returned 0.
+[22529:10325396:0619/094312.339946:VERBOSE2:chrome/updater/event_history.cc:265] Emitted a UPDATER_PROCESS END event to the history log
+[22529:10325396:0619/094312.340499:VERBOSE1:chrome/updater/updater.cc:419] UpdaterMain (--crash-handler) returned 0.
+[22479:10324618:0619/094339.974154:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[22479:10324520:0619/094422.315039:ERROR:CONSOLE:1] "test error from devtrace", source:  (1)
+[22479:10324520:0619/094443.865201:ERROR:CONSOLE:1] "test error from devtrace", source:  (1)
+[22479:10324520:0619/094500.976162:ERROR:CONSOLE:1] "test error from devtrace", source:  (1)
+[22479:10324618:0619/094502.626711:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[22479:10324618:0619/094747.839444:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[22479:10324618:0619/095538.239220:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT

@@ -1,0 +1,21 @@
+{
+  "sessionId": "2026-06-19-15-49-44",
+  "activeUrl": "",
+  "title": "",
+  "lastNavigation": "2026-06-19T15:49:44.302Z",
+  "summary": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "failedRequests": 0,
+    "lastError": null
+  },
+  "console": [],
+  "network": [],
+  "errors": [],
+  "pageSnapshot": {
+    "text": "",
+    "buttons": [],
+    "links": [],
+    "forms": []
+  }
+}
