@@ -183,6 +183,7 @@ devtrace skill help
 
 ## For Full Documentation
 
+- [EXAMPLES.md](./EXAMPLES.md) — Real-world usage examples
 - [README.md](./README.md) — Full feature documentation
 - [IMPLEMENTATION.md](./IMPLEMENTATION.md) — Architecture and design details
 - `.claude/skills/devtrace/SKILL.md` — Comprehensive skill guide

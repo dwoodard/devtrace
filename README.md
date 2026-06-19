@@ -49,6 +49,42 @@ devtrace skill install
 
 This creates a symlink in your Claude Code skills directory. The skill will be automatically available in Claude Code for AI agents to use.
 
+## Using Your Own Chrome Browser (Default)
+
+**By default, DevTrace now connects to your existing Chrome browser!**
+
+This means your extensions, bookmarks, and history are all available while DevTrace monitors your activity.
+
+Quick start:
+```bash
+# Terminal 1: Start Chrome with debugging
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
+
+# Terminal 2: Start DevTrace (connects to your Chrome automatically)
+devtrace start
+```
+
+Want a separate Chrome instance instead?
+```bash
+devtrace start --new
+```
+
+See [CHROME_SETUP.md](./CHROME_SETUP.md) for detailed instructions on:
+- Setting up Chrome with debugging on macOS, Linux, Windows
+- Using existing Chrome vs launching new
+- Troubleshooting guide
+
+## Quick Examples
+
+See [EXAMPLES.md](./EXAMPLES.md) for real-world usage scenarios including:
+
+- **Basic debugging** — Record and inspect a session
+- **Error analysis** — Capture and analyze JavaScript errors
+- **Network monitoring** — Track HTTP requests and failures
+- **AI agent workflows** — How agents use DevTrace to test web apps
+- **Integration with testing** — Using DevTrace in test suites
+- **Advanced examples** — Metrics extraction, session reports, comparisons
+
 ## Usage
 
 ### Start Observing
@@ -400,6 +436,14 @@ The first version intentionally avoids this complexity. The daemon-based approac
 - Sessions are timestamped and stored locally for easy inspection.
 - The JSON contract (especially `current-state.json`) is designed for AI agent inspection.
 - All errors are logged, but they don't crash the observer loop.
+
+## Documentation
+
+- **[CHROME_SETUP.md](./CHROME_SETUP.md)** — How to use your existing Chrome browser
+- **[EXAMPLES.md](./EXAMPLES.md)** — Real-world usage examples and workflows
+- **[QUICKSTART.md](./QUICKSTART.md)** — Quick start guide
+- **[IMPLEMENTATION.md](./IMPLEMENTATION.md)** — Architecture and implementation details
+- **[SKILL.md](./.claude/skills/devtrace/SKILL.md)** — Claude Code skill guide
 
 ## Troubleshooting
 

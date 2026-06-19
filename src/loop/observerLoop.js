@@ -6,6 +6,7 @@ import { setupErrorCapture } from '../capture/errorCapture.js';
 import { setupPageCapture, capturePageSnapshot } from '../capture/pageSnapshot.js';
 import { JsonlWriter } from '../storage/jsonlWriter.js';
 import { CurrentStateWriter } from '../storage/currentStateWriter.js';
+import chalk from 'chalk';
 
 export async function observerLoop(chrome, session, port) {
   const consoleWriter = new JsonlWriter(`${session.path}/console.jsonl`);
@@ -123,18 +124,37 @@ export async function observerLoop(chrome, session, port) {
     }
   };
 
+  let chromeNotFoundWarningShown = false;
+  let successfulDiscoveries = 0;
+
   const discoveryLoop = async () => {
     try {
       const targets = await discoverTargets(port);
 
-      for (const target of targets) {
-        // Only attach to page targets, not workers or other types
-        if (target.type === 'page' && target.webSocketDebuggerUrl) {
-          await attachToTarget(target.id, target.url);
+      // Reset the warning flag if we successfully connect
+      if (targets && targets.length >= 0) {
+        successfulDiscoveries++;
+        if (successfulDiscoveries === 1) {
+          chromeNotFoundWarningShown = false; // Reset on first success
+        }
+
+        for (const target of targets) {
+          // Only attach to page targets, not workers or other types
+          if (target.type === 'page' && target.webSocketDebuggerUrl) {
+            await attachToTarget(target.id, target.url);
+          }
         }
       }
     } catch (err) {
-      console.error('Discovery error:', err.message);
+      // Show helpful message on first error or periodically
+      if (!chromeNotFoundWarningShown || successfulDiscoveries === 0) {
+        chromeNotFoundWarningShown = true;
+        console.error(chalk.yellow('\n⚠️  Chrome is not responding on port ' + port));
+        console.error(chalk.yellow('Make sure Chrome is running with debugging enabled:\n'));
+        console.error(chalk.gray('/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome \\'));
+        console.error(chalk.gray('  --remote-debugging-port=' + port + '\n'));
+        console.error(chalk.yellow('Waiting for Chrome to connect...\n'));
+      }
     }
 
     setTimeout(discoveryLoop, 2000);

@@ -444,6 +444,13 @@ The tool is ready for use. Next phase would be:
 3. Build higher-level analysis on top of the raw event streams
 4. Create visualizations of browser activity
 
+## Documentation Index
+
+- **[EXAMPLES.md](./EXAMPLES.md)** — Real-world usage examples and workflows
+- **[README.md](./README.md)** — Complete feature documentation
+- **[QUICKSTART.md](./QUICKSTART.md)** — Quick start guide
+- **[SKILL.md](./.claude/skills/devtrace/SKILL.md)** — Claude Code skill guide
+
 ## Implementation Notes
 
 - Profile dir: `~/.devtrace/.chrome-profile`

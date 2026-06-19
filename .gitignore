@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Runtime data
+sessions/*
+!sessions/.gitkeep
+
+# Chrome profile
+.chrome-profile/
+
+# OS files
+.DS_Store
+.env
+.env.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.editorconfig

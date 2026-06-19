@@ -1,2 +1,3 @@
-2026/06/19-09:42:28.061 9d8a94 Creating DB /Users/dustin/projects/devtrace/.chrome-profile/Default/shared_proto_db/metadata since it was missing.
-2026/06/19-09:42:28.065 9d8a94 Reusing MANIFEST /Users/dustin/projects/devtrace/.chrome-profile/Default/shared_proto_db/metadata/MANIFEST-000001
+2026/06/19-10:18:31.582 9e5b07 Reusing MANIFEST /Users/dustin/projects/devtrace/.chrome-profile/Default/shared_proto_db/metadata/MANIFEST-000001
+2026/06/19-10:18:31.582 9e5b07 Recovering log #3
+2026/06/19-10:18:31.582 9e5b07 Reusing old log /Users/dustin/projects/devtrace/.chrome-profile/Default/shared_proto_db/metadata/000003.log 

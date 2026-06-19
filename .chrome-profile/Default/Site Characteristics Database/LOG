@@ -1,2 +1,3 @@
-2026/06/19-09:42:27.922 9d8abb Creating DB /Users/dustin/projects/devtrace/.chrome-profile/Default/Site Characteristics Database since it was missing.
-2026/06/19-09:42:27.928 9d8abb Reusing MANIFEST /Users/dustin/projects/devtrace/.chrome-profile/Default/Site Characteristics Database/MANIFEST-000001
+2026/06/19-10:18:31.407 9e5af5 Reusing MANIFEST /Users/dustin/projects/devtrace/.chrome-profile/Default/Site Characteristics Database/MANIFEST-000001
+2026/06/19-10:18:31.407 9e5af5 Recovering log #3
+2026/06/19-10:18:31.407 9e5af5 Reusing old log /Users/dustin/projects/devtrace/.chrome-profile/Default/Site Characteristics Database/000003.log 
