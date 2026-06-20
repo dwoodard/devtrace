@@ -5,11 +5,13 @@ export class CurrentStateWriter {
   constructor(sessionPath, sessionId) {
     this.filepath = path.join(sessionPath, 'current-state.json');
     this.sessionId = sessionId;
+    const now = new Date().toISOString();
     this.state = {
       sessionId,
+      sessionStartTime: now,
       activeUrl: '',
       title: '',
-      lastNavigation: new Date().toISOString(),
+      lastNavigation: now,
       summary: {
         consoleErrors: 0,
         consoleWarnings: 0,

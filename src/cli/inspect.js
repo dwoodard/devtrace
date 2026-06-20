@@ -1,10 +1,12 @@
 import { sessionManager } from '../storage/sessionManager.js';
+import { ChangeAnalyzer } from '../analyze/changeAnalyzer.js';
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 
 export async function inspectCommand(args) {
   const sessionId = args[0] || 'latest';
+  const showChanges = args.includes('--changes');
   const session = sessionManager.getSession(sessionId);
 
   if (!session) {
@@ -21,6 +23,38 @@ export async function inspectCommand(args) {
 
   const state = JSON.parse(fs.readFileSync(stateFile, 'utf-8'));
 
+  // Show smart changes if requested
+  if (showChanges) {
+    const analyzer = new ChangeAnalyzer(session.path);
+    const changes = await analyzer.analyzeChanges();
+
+    console.log(chalk.cyan(`\n📊 Key Changes in Session ${state.sessionId}\n`));
+
+    if (changes.length === 0) {
+      console.log(chalk.green('✓ No errors or failures detected\n'));
+    } else {
+      changes.forEach((change, index) => {
+        const icon = change.severity === 'high' ? '✗' : change.type === 'navigation' ? '🔄' : '⚠';
+        const color = change.severity === 'high' ? chalk.red : chalk.yellow;
+
+        if (change.type === 'console-error') {
+          console.log(color(`${index + 1}. ${icon} Console Error`));
+          console.log(`   ${change.text.substring(0, 80)}...`);
+        } else if (change.type === 'failed-request') {
+          console.log(color(`${index + 1}. ${icon} Failed Request - ${change.method} ${change.status}`));
+          console.log(`   ${change.url.substring(0, 80)}...`);
+        } else if (change.type === 'navigation') {
+          console.log(chalk.blue(`${index + 1}. ${icon} Navigated to ${change.url}`));
+        }
+        console.log();
+      });
+    }
+
+    console.log(chalk.gray(`To see full summary: devtrace inspect ${sessionId}\n`));
+    return;
+  }
+
+  // Original summary view
   console.log(chalk.cyan(`\n📊 Session: ${state.sessionId}\n`));
   console.log(chalk.blue(`URL: ${state.activeUrl}`));
   console.log(chalk.blue(`Title: ${state.title}`));
