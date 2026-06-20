@@ -205,17 +205,20 @@ Streams network requests and responses:
 
 ## Session Output
 
-Sessions are stored in `./sessions/` with this structure:
+Sessions are stored in `~/.devtrace/sessions/` (your home directory) with this structure:
 
 ```
-sessions/
-  latest/                         → symlink to the most recent session
-  2026-06-19-15-30-00/           → timestamped session directory
-    current-state.json           → AI-readable summary
-    console.jsonl                → raw console events
-    network.jsonl                → raw network events
-    errors.jsonl                 → raw error events
-    events.jsonl                 → all events combined
+~/.devtrace/
+  sessions/
+    latest/                      → symlink to the most recent session
+    2026-06-19-15-30-00/        → timestamped session directory
+      current-state.json        → AI-readable summary
+      console.jsonl             → raw console events
+      network.jsonl             → raw network events
+      errors.jsonl              → raw error events
+      actions.jsonl             → user actions captured
+      metadata.jsonl            → page metadata
+      events.jsonl              → all events combined
 ```
 
 ### `current-state.json`
@@ -503,4 +506,4 @@ lsof -i :3333
 
 **Session files not being written:**
 
-Check that `./sessions/` is writable and has space available.
+Check that `~/.devtrace/` is writable and has space available: `ls -la ~/.devtrace/`

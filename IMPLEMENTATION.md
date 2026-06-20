@@ -43,7 +43,7 @@ devtrace start
 
 This will:
 1. Launch Chrome with remote debugging enabled
-2. Create a new timestamped session directory in `./sessions/`
+2. Create a new timestamped session directory in `~/.devtrace/sessions/`
 3. Start a local HTTP API on `http://localhost:3333`
 4. Begin watching any tabs you open in Chrome
 
@@ -456,6 +456,6 @@ The tool is ready for use. Next phase would be:
 - Profile dir: `~/.devtrace/.chrome-profile`
 - DevTools port: `9222` (configurable)
 - API port: `3333` (configurable)
-- Session directory: `./sessions/`
+- Session directory: `~/.devtrace/sessions/`
 - Discovery interval: `2000ms`
 - JSONL flush interval: `1000ms`

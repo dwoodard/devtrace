@@ -134,7 +134,7 @@ Make sure you navigate to a website in Chrome (not just `about:blank`).
 Port 3333 might be in use. Check: `lsof -i :3333`
 
 **Files not being written?**
-Check that `./sessions/` is writable: `ls -la sessions/`
+Check that `~/.devtrace/sessions/` is writable: `ls -la sessions/`
 
 ## Using the Claude Code Skill
 
