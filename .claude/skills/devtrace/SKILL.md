@@ -11,10 +11,17 @@ description: Local browser observation tool - capture console logs, network requ
 DevTrace is a local browser recorder that gives an AI agent **eyes into what you're doing on the page**.
 
 When you click around, submit forms, or navigate:
-- **I see what you did** — navigation, clicks, input, form submissions
-- **I see what happened** — errors, network calls, page changes, performance
+- **I see what you did** — navigation, clicks, form submissions, search queries
+- **I see what happened** — errors, network calls, page changes, console output
 - **I see the connection** — which action caused which error or result
 
+DevTrace captures:
+- **Your actions** (clicks, navigation, forms)
+- **Page metadata** (titles, search queries, content)
+- **Browser events** (console, network, errors)
+- **The timeline** (what happened when)
+
+All data stays local. No cloud. No privacy concerns.
 
 ## The Simple Workflow
 
@@ -103,11 +110,20 @@ devtrace stop
 
 Sessions are stored in `./sessions/latest/`:
 
-- `current-state.json` — AI-readable summary (JSON)
-- `console.jsonl` — Raw console events (one per line)
-- `network.jsonl` — Raw network events (one per line)
-- `errors.jsonl` — JavaScript errors
-- `events.jsonl` — All events combined
+**Summary:**
+- `current-state.json` — Session metadata and summary (JSON)
+
+**User Actions & Page State:**
+- `actions.jsonl` — Your actions (navigation, clicks, forms)
+- `metadata.jsonl` — Page metadata (titles, URLs, search queries)
+
+**Browser Events:**
+- `console.jsonl` — Console logs, warnings, errors
+- `network.jsonl` — Network requests and responses
+- `errors.jsonl` — JavaScript exceptions
+
+**Combined:**
+- `events.jsonl` — All events merged chronologically
 
 ## Commands Reference
 

@@ -24,23 +24,33 @@ The AI can see the complete picture of your actions and their consequences, maki
 
 ## What DevTrace Captures
 
-**User Actions:**
+**User Actions** (`actions.jsonl`):
 - Page navigation and URL changes
-- Clicks and form submissions
-- Input events (what was typed)
-- Search queries and parameters
+- Form submissions
+- Click events
+- Detected via Chrome DevTools Protocol
 
-**Browser Results:**
+**Page Metadata** (`metadata.jsonl`):
+- Page title changes
+- URL parameters (search queries, filters, etc.)
+- Page content snapshots (buttons, forms, links)
+- Form detection and analysis
+
+**Browser State** (`console.jsonl`, `network.jsonl`, `errors.jsonl`):
 - Console logs, warnings, errors
-- Network requests and responses (including body/headers)
-- Page title and content changes
-- Performance metrics
-
-**Error Context:**
+- Network requests and responses
 - JavaScript exceptions
-- Network failures
-- Resource load issues
-- Causation chain (what action led to what error)
+- Network failures and timeouts
+
+**Combined Events** (`events.jsonl`):
+- All events merged chronologically
+- Full event history for analysis
+
+**Session Summary** (`current-state.json`):
+- Session metadata (start time, last navigation)
+- Last search query performed
+- Error and failure counts
+- Recent events snapshot
 
 All data is written to local files in a timestamped session directory.
 

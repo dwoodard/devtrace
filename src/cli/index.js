@@ -94,7 +94,8 @@ The session viewer allows you to:
 
 Description:
   Displays metadata and state information about a recorded session.
-  Use --changes to see smart summary of key changes (errors, failures, navigations).
+  Shows what you did, what happened, and the causation chain.
+  Use --changes to see smart summary of key changes.
 
 Usage:
   devtrace inspect [session] [--changes]
@@ -102,6 +103,12 @@ Usage:
 Arguments:
   [session]          Session identifier or 'latest' for most recent (default: latest)
   --changes          Show smart summary of 3-4 key changes (errors/failures first)
+
+Captured Data:
+  - Your actions (navigation, clicks, form submissions)
+  - Page metadata (titles, search queries, content)
+  - Browser events (console, network, errors)
+  - Complete timeline of what happened
 
 Examples:
   devtrace inspect latest           Show full session summary
