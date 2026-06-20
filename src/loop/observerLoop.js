@@ -9,6 +9,9 @@ import { CurrentStateWriter } from '../storage/currentStateWriter.js';
 import chalk from 'chalk';
 import { spawn } from 'child_process';
 import { findChromiumBinary } from '../utils/chromeUtils.js';
+import { getEnv } from '../utils/envLoader.js';
+import path from 'path';
+import os from 'os';
 
 export async function observerLoop(chrome, session, port) {
   const consoleWriter = new JsonlWriter(`${session.path}/console.jsonl`);
@@ -166,10 +169,19 @@ export async function observerLoop(chrome, session, port) {
           if (chromeBinary) {
             console.log(chalk.cyan('\nLaunching Chrome with debugging enabled...\n'));
             try {
-              const child = spawn(chromeBinary, [
+              // Get profile from .env, Chrome requires a data directory for remote debugging
+              let profileDir = getEnv('DEVTRACE_CHROME_PROFILE');
+              if (!profileDir) {
+                profileDir = path.join(os.homedir(), 'projects/devtrace/.chrome-profile');
+              }
+
+              const chromeArgs = [
                 `--remote-debugging-port=${port}`,
+                `--user-data-dir=${profileDir}`,
                 '--no-sandbox'
-              ], {
+              ];
+
+              const child = spawn(chromeBinary, chromeArgs, {
                 stdio: 'pipe',
                 detached: true
               });

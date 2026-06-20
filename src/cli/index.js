@@ -4,6 +4,7 @@ import { openCommand } from './open.js';
 import { inspectCommand } from './inspect.js';
 import { tailCommand } from './tail.js';
 import { skillCommand } from './skill.js';
+import { setupCommand } from './setup.js';
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
@@ -41,9 +42,13 @@ const args = process.argv.slice(3);
       case 'skill':
         await skillCommand(args);
         break;
+      case 'setup':
+        await setupCommand();
+        break;
       case 'help':
       case '-h':
       case '--help':
+      case undefined:
         printHelp();
         break;
       default:
@@ -58,10 +63,8 @@ const args = process.argv.slice(3);
 })();
 
 function printHelp() {
-  console.log(`
-DevTrace - Local browser observation tool
-
-Usage:
+  console.log(`Usage:
+  devtrace setup              Configure DevTrace (interactive walkthrough)
   devtrace start              Connect to your existing Chrome browser (default)
   devtrace start --new        Launch a new Chrome instance instead
   devtrace start 9222 3333    Use custom ports
@@ -75,24 +78,5 @@ Usage:
   devtrace tail network      Follow network requests in real-time
   devtrace skill install      Install the Claude skill
   devtrace skill status       Check skill installation status
-  devtrace skill help         Show this help message
-
-Flags:
-  --new                    Launch a new Chrome instance (instead of using existing)
-  --force                  Kill any processes using the ports and start fresh
-  --auto-port              Automatically use free ports if defaults are taken
-
-Sessions are stored in ./sessions/
-Skill location: ./.claude/skills/devtrace
-
-Examples:
-  devtrace start                    # Connect to your existing Chrome
-  devtrace start --new              # Launch a new Chrome instance
-  devtrace start 9223               # Custom Chrome DevTools port
-  devtrace start 9223 3334          # Custom Chrome and API ports
-  devtrace start --force            # Kill existing processes and restart
-  devtrace start --auto-port        # Auto-find free ports
-  devtrace stop                     # Stop the running DevTrace service
-  devtrace stop 9223 3334           # Stop with custom ports
-  `);
+  devtrace skill help         Show this help message`);
 }

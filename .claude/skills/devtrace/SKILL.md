@@ -1,7 +1,7 @@
 ---
+name: devtrace
 argument-hint: <command>
 description: Local browser observation tool - capture console logs, network requests, and page state for debugging and AI inspection
-allowed-tools: Bash, Read
 ---
 
 # DevTrace Skill
@@ -21,50 +21,64 @@ All data is written to local files and a local HTTP API, making it perfect for:
 - Understanding what happened in a test or interaction
 - Recording browser sessions for analysis
 
-## When to Use DevTrace
+## Invoking DevTrace
 
-Use `/devtrace` when you need to:
+When you run `/devtrace`, you're loading this skill. The skill then:
+1. **Checks if DevTrace is already running** — If not, it'll suggest starting it
+2. **Detects your project type** — Suggests the most relevant things to monitor (e.g., extension console for Chrome extensions, Laravel logs for web apps)
+3. **Guides you through the workflow** — Start → interact with your app → inspect results
 
-✅ **Capture browser behavior** for later analysis
-✅ **Debug web app issues** by seeing what's happening in the browser
-✅ **Let AI agents inspect** what happened during a test
-✅ **Record browser sessions** to understand user interactions
-✅ **Monitor network activity** while testing a web app
-✅ **Capture console errors** from a real browser session
+## Getting Started (Quickest Path)
 
-## How to Use
+The typical workflow is **three steps**:
 
-### Start Observing
+### Step 1: Check Status and Start
+
+```bash
+/devtrace status
+```
+
+If not running, start it:
 
 ```bash
 /devtrace start
 ```
 
 This will:
-1. Launch Chrome (or connect to existing Chrome instance)
-2. Create a timestamped session directory in `./sessions/`
-3. Start a local API on `http://localhost:3333`
-4. Begin capturing all browser activity
+- Launch Chrome (or connect to existing instance)
+- Create a timestamped session directory in `./sessions/`
+- Start a local API on `http://localhost:3333`
+- Begin capturing all browser activity (console, network, page state, errors)
 
-Then navigate to any website in Chrome. Everything is recorded automatically.
+### Step 2: Trigger Your Behavior
 
-Press `Ctrl+C` to stop.
+In Chrome, navigate to your app and interact with it:
+- Load a page
+- Click buttons or interact with features
+- Check the console for errors
+- Let network requests complete
 
-### View Results
+Everything is being recorded automatically.
 
-While DevTrace is running:
+### Step 3: Inspect When Needed
+
+When you want to see what happened, run:
 
 ```bash
-# In another terminal
 /devtrace inspect
 ```
 
-Or query specific data:
+This shows a summary. For **specific details only when needed**:
 
 ```bash
-/devtrace console          # Show recent console messages
-/devtrace network          # Show recent network requests
-/devtrace api              # Get full session state as JSON
+/devtrace console          # Only if you need to see console logs/errors
+/devtrace network          # Only if you need to check HTTP requests
+```
+
+**Stop recording when done:**
+
+```bash
+/devtrace stop
 ```
 
 ### Session Data
@@ -79,70 +93,85 @@ Sessions are stored in `./sessions/latest/`:
 
 ## Commands Reference
 
+### Primary Workflow (Most Common)
+
 | Command | Purpose |
 |---------|---------|
-| `/devtrace start` | Launch Chrome and start observing |
-| `/devtrace stop` | Stop the current session |
-| `/devtrace inspect` | View session summary |
-| `/devtrace console` | Show console messages from latest session |
-| `/devtrace network` | Show network requests from latest session |
-| `/devtrace api` | Query the local API for full session data |
-| `/devtrace status` | Check if DevTrace is running |
-| `/devtrace files` | Show the files in the latest session |
+| `/devtrace status` | Check if DevTrace is running (run this first) |
+| `/devtrace start` | Launch Chrome and begin recording all browser activity |
+| `/devtrace inspect` | View summary of the latest session (run after interacting with your app) |
+| `/devtrace stop` | Stop recording and close the session |
+
+### Secondary Tools (Use Only When Needed)
+
+| Command | Purpose |
+|---------|---------|
+| `/devtrace console` | Show console messages/errors from latest session (only if you need to inspect logs) |
+| `/devtrace network` | Show network requests from latest session (only if you need to check API calls) |
+| `/devtrace api` | Query the local API for full structured data as JSON |
+| `/devtrace files` | Show the files in the latest session directory |
 
 ## Real-World Examples
 
-### Example 1: Debug a Web App
+### Example 1: Quick Browser Debugging (Typical Workflow)
 
 ```bash
-# Start observing
+# 1. Check status and start recording
+/devtrace status
 /devtrace start
 
-# (In Chrome, navigate to your app and trigger some behavior)
-# (Open the console, interact with the page, etc.)
+# 2. (In Chrome) Navigate to your app and trigger the behavior
+#    - Load a page
+#    - Click buttons
+#    - Interact with features
+#    - Let requests complete
 
-# In another terminal, inspect what happened
+# 3. See what happened
 /devtrace inspect
 
-# Look at the console output
-/devtrace console
+# 4. If needed, dig into specifics
+/devtrace console    # Only if looking for console errors
+/devtrace network    # Only if checking HTTP requests
 
-# Check network requests
-/devtrace network
+# 5. Stop when done
+/devtrace stop
 ```
 
-### Example 2: Let an AI Agent Inspect Browser State
+### Example 2: Chrome Extension Debugging
+
+For Chrome extension development (like google-maps-content.js), DevTrace captures:
+- Extension console logs and errors
+- Content script execution
+- Background script messages
+- Network requests from the extension
 
 ```bash
-# Start observing
 /devtrace start
 
-# (Run some tests or interactions in Chrome)
+# (In Chrome) Navigate to a page and trigger your extension
+# Check the extension popup, content script behavior, etc.
 
-# Query the API to get structured data
+/devtrace inspect      # See overall session
+/devtrace console      # Check for extension errors
+```
+
+### Example 3: AI-Driven Session Inspection
+
+When Claude Code needs to analyze what happened:
+
+```bash
+/devtrace start
+
+# (Trigger behavior in Chrome)
+
+# Query the structured API
 curl http://localhost:3333/latest | jq .
 
-# Agent can now:
-# - See what console errors occurred
+# Claude Code can now:
+# - Analyze console errors
 # - Check if network requests succeeded
-# - Understand the page state (buttons, forms, links)
-# - Read the full event history
-```
-
-### Example 3: Capture Console Errors
-
-```bash
-# Start observing
-/devtrace start
-
-# (In Chrome console, run some code that causes errors)
-# (Or trigger errors through user interactions)
-
-# Stop and check results
-/devtrace inspect
-
-# View all errors
-cat sessions/latest/errors.jsonl | jq .
+# - Understand page structure and state
+# - Review full event history
 ```
 
 ## Session Structure
@@ -288,22 +317,29 @@ Example agent workflow:
 
 ---
 
-## Quick Decision Tree
+## The Recommended Workflow
 
-**"Should I use DevTrace?"**
+When you invoke `/devtrace`:
 
-- Is it a browser-related issue? → YES
-  - Do I need to see what happened? → YES
-    - Console output? → `/devtrace start` then check console.jsonl
-    - Network requests? → `/devtrace start` then check network.jsonl
-    - Full page state? → `/devtrace start` then check current-state.json
-  - Do I need an AI to inspect it? → YES
-    - Query the API → `/devtrace start` then use http://localhost:3333/latest
-- Is it a non-browser issue? → NO → Use regular debugging tools
+1. **First**: Run `/devtrace status` to check if it's already running
+2. **If not running**: Run `/devtrace start` to launch Chrome and begin recording
+3. **Then**: Go to Chrome and interact with your app (navigate, click, trigger behavior)
+4. **When done**: Run `/devtrace inspect` to see what was captured
+5. **Only if needed**: 
+   - Run `/devtrace console` to check logs/errors
+   - Run `/devtrace network` to check HTTP requests
+6. **Finally**: Run `/devtrace stop` to stop recording
 
-**"What command should I run?"**
+## When Should I Check Console/Network?
 
-- Starting fresh → `/devtrace start`
-- Check results → `/devtrace inspect`
-- See specific data → `/devtrace console` or `/devtrace network`
-- Get structured data → `/devtrace api` or `curl http://localhost:3333/latest`
+- **Console** — Only if you saw errors in the browser or want to verify specific log messages
+- **Network** — Only if you need to verify API calls, request payloads, or response status codes
+- **Inspector** — Usually enough; gives you the summary automatically
+
+## Project-Specific Guidance
+
+**For this project (Papertrail with Chrome extension):**
+- Start DevTrace and navigate to pages where your extension is active
+- Most issues will show up in the console (extension errors, content script logs)
+- Check network if debugging API requests from your extension
+- The `inspect` command gives you the full picture without needing to dive into logs
