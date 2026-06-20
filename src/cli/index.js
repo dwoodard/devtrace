@@ -93,18 +93,20 @@ The session viewer allows you to:
   inspect: `devtrace inspect - Inspect session state
 
 Description:
-  Displays detailed metadata and state information about a recorded session.
+  Displays metadata and state information about a recorded session.
+  Use --changes to see smart summary of key changes (errors, failures, navigations).
 
 Usage:
-  devtrace inspect [session]
+  devtrace inspect [session] [--changes]
 
 Arguments:
-  [session]          Session identifier or 'latest' for most recent
-                     Default: latest
+  [session]          Session identifier or 'latest' for most recent (default: latest)
+  --changes          Show smart summary of 3-4 key changes (errors/failures first)
 
 Examples:
-  devtrace inspect latest           Show latest session details
-  devtrace inspect 1234567890       Show specific session details`,
+  devtrace inspect latest           Show full session summary
+  devtrace inspect latest --changes Show smart changes summary
+  devtrace inspect 2026-06-20-15-22-13 --changes Show changes for specific session`,
 
   tail: `devtrace tail - Follow real-time browser logs
 
