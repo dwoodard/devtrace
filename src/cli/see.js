@@ -54,6 +54,9 @@ export async function seeCommand(args) {
   } else {
     outputCompact({ consoleLogs, networkRequests, errors, options, state });
   }
+
+  // Always exit cleanly to return control to CLI
+  process.exit(0);
 }
 
 function parseArgs(args) {

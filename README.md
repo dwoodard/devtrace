@@ -175,6 +175,34 @@ Recent network requests:
   ...
 ```
 
+### Quick View of Activity
+
+```bash
+devtrace see
+```
+
+Shows a clean, compact summary of the latest session activity with errors first:
+
+```
+[SUMMARY]
+Logs: 20 | Warns: 0 | Errors: 0 | Network: 20 (20 OK, 0 failed) | Time: entire session
+
+[TIMELINE]
+13:16:51.698  ✓ [App] Tab changed: "Overview" → "Graph"
+13:16:51.701  ✓ GET http://api.example.com/projects (200, 147ms)
+13:16:51.805  ✓ [App] Creating project: "Test"
+13:16:52.001  ✓ POST http://api.example.com/projects (201, 156ms)
+```
+
+Filter by time or domain:
+```bash
+devtrace see --ago=30                           # Last 30 seconds only
+devtrace see --domain=papertrail.test           # Only specific domain
+devtrace see --ago=10 --domain=papertrail.test  # Combined filters
+devtrace see --errors-only                      # Only errors & warnings
+devtrace see --json                             # Machine-readable JSON
+```
+
 ### Follow Console Logs
 
 ```bash
