@@ -68,7 +68,7 @@ If not running, start it:
 
 This will:
 - Launch Chrome (or connect to existing instance)
-- Create a timestamped session directory in `./sessions/`
+- Create a timestamped session in `~/.devtrace/sessions/`
 - Start a local API on `http://localhost:3333`
 - Begin capturing all browser activity (console, network, page state, errors)
 
@@ -106,7 +106,7 @@ devtrace stop
 
 ### Session Data
 
-Sessions are stored in `./sessions/latest/`:
+Sessions are stored in `~/.devtrace/sessions/` on your machine (accessible from any project):
 
 **Summary:**
 - `current-state.json` — Session metadata and summary (JSON)

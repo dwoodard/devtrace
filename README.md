@@ -52,7 +52,7 @@ The AI can see the complete picture of your actions and their consequences, maki
 - Error and failure counts
 - Recent events snapshot
 
-All data is written to local files in a timestamped session directory.
+All data is written to `~/.devtrace/sessions/` on your machine. Sessions persist across projects and can be accessed from anywhere.
 
 ## Installation
 
