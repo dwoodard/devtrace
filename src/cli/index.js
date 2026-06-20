@@ -65,18 +65,11 @@ const args = process.argv.slice(3);
 function printHelp() {
   console.log(`Usage:
   devtrace setup              Configure DevTrace (interactive walkthrough)
-  devtrace start              Connect to your existing Chrome browser (default)
-  devtrace start --new        Launch a new Chrome instance instead
-  devtrace start 9222 3333    Use custom ports
-  devtrace start --force      Kill existing processes and restart
-  devtrace start --auto-port  Auto-detect free ports
+  devtrace start              Start DevTrace (supports --new, --force, --auto-port, custom ports)
   devtrace stop               Stop the running DevTrace service
-  devtrace stop 9222 3333     Stop with custom ports
   devtrace open              Open the latest session in a browser
-  devtrace inspect latest    Inspect the latest session state
-  devtrace tail console      Follow console logs in real-time
-  devtrace tail network      Follow network requests in real-time
-  devtrace skill install      Install the Claude skill
-  devtrace skill status       Check skill installation status
-  devtrace skill help         Show this help message`);
+  devtrace inspect            Inspect session state
+  devtrace tail               Follow console or network logs in real-time
+  devtrace skill              Manage Claude skill (install, status, help)
+  devtrace help               Show this help message`);
 }
