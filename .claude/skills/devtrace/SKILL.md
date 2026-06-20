@@ -15,11 +15,19 @@ DevTrace is a local daemon that watches your Chrome browser and records everythi
 - **Page state** — URLs, titles, buttons, links, forms
 - **Exceptions** — JavaScript errors with stack traces
 
-All data is written to local files and a local HTTP API, making it perfect for:
-- Debugging web applications
-- AI agents inspecting browser state
-- Understanding what happened in a test or interaction
-- Recording browser sessions for analysis
+All data is written to local files and a local HTTP API.
+
+## Why DevTrace Matters for AI
+
+As an AI assistant, DevTrace gives me **direct observability** into what your code is actually doing:
+
+- **I can see errors directly** instead of guessing from your description
+- **I can verify fixes work** by running code, capturing the session, and analyzing the output
+- **I can debug faster** by inspecting actual console errors, failed API calls, and page state
+- **I can make decisions programmatically** by querying the structured JSON API
+- **I can give you confidence** that my recommendations are based on real data, not assumptions
+
+This transforms debugging from a guessing game into a data-driven process where I can see exactly what went wrong, verify my fixes work, and catch issues before you encounter them in production.
 
 ## Invoking DevTrace
 
@@ -299,28 +307,36 @@ curl http://localhost:3333/latest/page | jq .
 curl http://localhost:3333/health | jq .
 ```
 
-## How AI Agents Use DevTrace
+## How I Use DevTrace as Your AI Assistant
 
-Agents can:
+When you ask me to fix a bug, build a feature, or debug an issue:
 
-1. **Trigger behavior** in a website
-2. **Query `/latest`** endpoint to see what happened
-3. **Analyze console errors** to understand issues
-4. **Check network requests** to verify API calls
-5. **Read page snapshot** to understand UI state
-6. **Use events.jsonl** to see detailed event history
+1. **I start DevTrace** to begin recording (`devtrace start`)
+2. **I trigger the behavior** — navigate to pages, interact with your app, reproduce the issue
+3. **I immediately query the API** — `curl http://localhost:3333/latest` to get structured data
+4. **I analyze what actually happened**:
+   - Console errors? I see the exact stack traces
+   - Network failures? I see which requests failed and why
+   - Page broken? I see the rendered state
+   - Unexpected behavior? I see the exact sequence of events
+5. **I make decisions based on real data** — not guesses
+6. **I verify my fixes work** by running them, capturing with DevTrace, and confirming no errors occurred
+7. **I tell you confidently** if something works — because I've *seen* it work
 
-Example agent workflow:
+### Real Example: Debugging a Feature
 
-```
-1. Start DevTrace: devtrace start
-2. Trigger test: navigate to website, click buttons, etc.
-3. Query state: curl http://localhost:3333/latest
-4. Analyze data: look at summary, console errors, network requests
-5. Determine next action based on results
-6. Repeat until test complete
-7. Review full session: cat sessions/latest/current-state.json
-```
+Instead of:
+- You: "The button isn't working"
+- Me: "Can you describe what happened?"
+- You: (describes it)
+- Me: (makes a guess and you test it)
+
+With DevTrace:
+- You: "The button isn't working"
+- Me: (start DevTrace, click button, inspect immediately)
+- Me: "I see the issue — the API returned a 404. Here's the fix."
+- Me: (test the fix, verify no errors with DevTrace)
+- Me: (you get a confident solution, not a guess)
 
 ## Troubleshooting
 
@@ -383,3 +399,13 @@ When you use DevTrace:
 - Most issues will show up in the console (extension errors, content script logs)
 - Check network if debugging API requests from your extension
 - The `inspect` command gives you the full picture without needing to dive into logs
+
+## When to Use DevTrace
+
+Use DevTrace when:
+
+- **Reporting a bug** — Rather than describing what happened, capture it so we can see the actual error
+- **Verifying a fix** — After changes are made, we can confirm with real data that it works
+- **Debugging complex issues** — Instead of back-and-forth descriptions, we have the actual console logs, network requests, and page state
+- **Testing end-to-end workflows** — Capture the full flow to ensure all parts work together
+- **Documenting what went wrong** — Sessions provide concrete evidence of issues, making solutions more reliable
