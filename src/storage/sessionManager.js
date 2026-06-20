@@ -1,9 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import os from 'os';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const sessionsDir = path.join(__dirname, '../../sessions');
+const sessionsDir = path.join(os.homedir(), '.devtrace', 'sessions');
 
 class SessionManager {
   createSession() {

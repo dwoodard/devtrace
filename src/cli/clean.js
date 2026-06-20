@@ -2,6 +2,7 @@ import { sessionManager } from '../storage/sessionManager.js';
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 export async function cleanCommand(args) {
   const force = args.includes('--force');
@@ -31,10 +32,7 @@ export async function cleanCommand(args) {
   }
 
   // Delete all sessions
-  const sessionsDir = path.join(
-    path.dirname(new URL(import.meta.url).pathname),
-    '../../sessions'
-  );
+  const sessionsDir = path.join(os.homedir(), '.devtrace', 'sessions');
 
   try {
     for (const sessionId of sessions) {
