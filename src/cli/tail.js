@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import readline from 'readline';
 
 export async function tailCommand(args) {
-  const type = args[0]; // 'console' or 'network'
+  const type = args[0]; // 'console', 'network', or undefined for both
   const sessionId = 'latest';
   const session = sessionManager.getSession(sessionId);
 
@@ -14,43 +14,68 @@ export async function tailCommand(args) {
     process.exit(1);
   }
 
-  const filename = `${type}.jsonl`;
-  const filepath = path.join(session.path, filename);
-
-  if (!fs.existsSync(filepath)) {
-    console.log(chalk.yellow(`Waiting for first ${type} events...`));
+  // Validate type if provided
+  if (type && type !== 'console' && type !== 'network') {
+    console.error(chalk.red(`Error: Invalid type '${type}'\n`));
+    console.log(chalk.yellow(`Usage: devtrace tail [console|network]\n`));
+    console.log('Examples:');
+    console.log('  devtrace tail              Follow all events (console + network)');
+    console.log('  devtrace tail console      Follow console logs only');
+    console.log('  devtrace tail network      Follow network requests only\n');
+    console.log('For detailed help: devtrace tail -h');
+    process.exit(1);
   }
 
-  console.log(chalk.cyan(`\n📡 Following ${type} events (Ctrl+C to exit)\n`));
+  const types = type ? [type] : ['console', 'network'];
+  const displayName = type || 'all events';
 
-  let lastSize = 0;
+  const filePaths = {};
+  for (const t of types) {
+    const filename = `${t}.jsonl`;
+    filePaths[t] = path.join(session.path, filename);
+  }
 
-  const pollFile = () => {
-    try {
-      const stats = fs.statSync(filepath);
-      if (stats.size > lastSize) {
-        const stream = fs.createReadStream(filepath, { start: lastSize });
-        const rl = readline.createInterface({ input: stream });
+  const existsAny = Object.values(filePaths).some(fp => fs.existsSync(fp));
+  if (!existsAny) {
+    console.log(chalk.yellow(`Waiting for first ${displayName}...`));
+  }
 
-        rl.on('line', (line) => {
-          if (line.trim()) {
-            const event = JSON.parse(line);
-            printEvent(type, event);
-          }
-        });
+  console.log(chalk.cyan(`\n📡 Following ${displayName} (Ctrl+C to exit)\n`));
 
-        rl.on('close', () => {
-          lastSize = stats.size;
-        });
+  const lastSizes = {};
+  for (const t of types) {
+    lastSizes[t] = 0;
+  }
+
+  const pollFiles = () => {
+    for (const t of types) {
+      const filepath = filePaths[t];
+      try {
+        const stats = fs.statSync(filepath);
+        if (stats.size > lastSizes[t]) {
+          const stream = fs.createReadStream(filepath, { start: lastSizes[t] });
+          const rl = readline.createInterface({ input: stream });
+
+          rl.on('line', (line) => {
+            if (line.trim()) {
+              const event = JSON.parse(line);
+              printEvent(t, event);
+            }
+          });
+
+          rl.on('close', () => {
+            lastSizes[t] = stats.size;
+          });
+        }
+      } catch (err) {
+        // File doesn't exist yet
       }
-    } catch (err) {
-      // File doesn't exist yet
     }
 
-    setTimeout(pollFile, 500);
+    setTimeout(pollFiles, 500);
   };
 
-  pollFile();
+  pollFiles();
 }
 
 function printEvent(type, event) {

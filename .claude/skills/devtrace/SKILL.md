@@ -73,20 +73,21 @@ Everything is being recorded automatically.
 When you want to see what happened, run:
 
 ```bash
-/devtrace inspect
+devtrace inspect
 ```
 
-This shows a summary. For **specific details only when needed**:
+This shows a summary. For **real-time logs while running**:
 
 ```bash
-/devtrace console          # Only if you need to see console logs/errors
-/devtrace network          # Only if you need to check HTTP requests
+devtrace tail                      # Stream all events (console + network)
+devtrace tail console              # Stream console logs only
+devtrace tail network              # Stream network requests only
 ```
 
 **Stop recording when done:**
 
 ```bash
-/devtrace stop
+devtrace stop
 ```
 
 ### Session Data
@@ -114,7 +115,7 @@ Sessions are stored in `./sessions/latest/`:
 
 | Command | Purpose |
 |---------|---------|
-| `devtrace tail [console\|network]` | Stream console messages/errors or network requests in real-time |
+| `devtrace tail [console\|network]` | Stream logs in real-time (both if no arg specified) |
 | `devtrace setup` | Configure DevTrace with interactive walkthrough |
 | `devtrace skill` | Install or check Claude skill status |
 
@@ -155,9 +156,10 @@ devtrace start
 # 3. See what happened
 devtrace inspect
 
-# 4. If needed, dig into specifics
-devtrace tail console    # Stream console errors as they happen
-devtrace tail network    # Stream network requests as they happen
+# 4. Stream logs if needed
+devtrace tail                      # Stream all events (console + network)
+devtrace tail console              # Stream console logs only
+devtrace tail network              # Stream network requests only
 
 # 5. Open session in browser for full details
 devtrace open
@@ -184,7 +186,8 @@ devtrace start --new
 # Check the extension popup, content script behavior, etc.
 
 devtrace inspect               # See overall session
-devtrace tail console          # Stream console errors from extension
+devtrace tail                  # Stream all events (console + network)
+devtrace tail console          # Stream console errors from extension only
 devtrace open                  # View full session in browser
 devtrace stop                  # Stop when done
 

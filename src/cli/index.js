@@ -115,6 +115,10 @@ Description:
 Usage:
   devtrace tail [type]
 
+Arguments:
+  [type]             Optional: 'console' or 'network'
+                     If omitted, shows both console and network events
+
 Types:
   console            All browser console output (logs, warnings, errors)
   network            All HTTP requests (APIs, resources, failures)
@@ -147,13 +151,14 @@ When Data Appears:
   • Updates checked every 500ms
 
 Examples:
+  devtrace tail                     Follow all events (console + network)
   devtrace tail console             Watch console output while you interact
   devtrace tail network             See all API calls and resource loads
 
 Use Cases:
-  • Debugging API failures (see failed requests immediately)
+  • Debugging issues (see console errors + API failures together)
   • Verifying API responses and request payloads
-  • Catching console errors as they happen
+  • Catching console errors and network problems as they happen
   • Tracking background processes and webhooks`,
 
   skill: `devtrace skill - Manage Claude DevTrace skill
