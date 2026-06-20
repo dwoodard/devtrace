@@ -8,26 +8,36 @@ description: Local browser observation tool - capture console logs, network requ
 
 ## What DevTrace Does
 
-DevTrace is a local daemon that watches your Chrome browser and records everything that happens:
+DevTrace is a local browser recorder that gives an AI agent **eyes into what you're doing on the page**.
 
-- **Console output** — All logs, warnings, and errors
-- **Network activity** — HTTP requests, responses, and failures
-- **Page state** — URLs, titles, buttons, links, forms
-- **Exceptions** — JavaScript errors with stack traces
+When you click around, submit forms, or navigate:
+- **I see what you did** — navigation, clicks, input, form submissions
+- **I see what happened** — errors, network calls, page changes, performance
+- **I see the connection** — which action caused which error or result
 
-All data is written to local files and a local HTTP API.
+All data stays local. No cloud. No privacy concerns.
 
-## Why DevTrace Matters for AI
+## The Simple Workflow
 
-As an AI assistant, DevTrace gives me **direct observability** into what your code is actually doing:
+```
+devtrace start          ← Start recording your browser
+[You click around]      ← AI watches what you're doing
+devtrace stop           ← Stop recording
+"What happened?"        ← Ask the AI
+AI: "You clicked X,     ← AI explains the causation chain
+which triggered Y,      
+which failed with Z"
+```
 
-- **I can see errors directly** instead of guessing from your description
-- **I can verify fixes work** by running code, capturing the session, and analyzing the output
-- **I can debug faster** by inspecting actual console errors, failed API calls, and page state
-- **I can make decisions programmatically** by querying the structured JSON API
-- **I can give you confidence** that my recommendations are based on real data, not assumptions
+## Why This Matters
 
-This transforms debugging from a guessing game into a data-driven process where I can see exactly what went wrong, verify my fixes work, and catch issues before you encounter them in production.
+**For debugging:** Instead of describing "something broke", the AI can see exactly what you did and what went wrong.
+
+**For testing:** The AI can verify that your changes actually work by recording a session and analyzing the results.
+
+**For understanding:** The AI can show you the complete picture—not just errors, but what actions led to those errors.
+
+**For speed:** No back-and-forth questions. The AI sees the data and understands what happened.
 
 ## Invoking DevTrace
 

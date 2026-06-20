@@ -1,20 +1,48 @@
 # DevTrace
 
-A local browser observation tool that connects to Chrome through the Chrome DevTools Protocol and records what happened in the browser so an AI agent can inspect the end result from local files or a local API.
+**Give AI agents eyes into what you're doing on the page.**
 
-Includes a **Claude Code skill** (`/devtrace`) for easy integration with AI agents.
+DevTrace is a local browser observation tool that records your browser activity so an AI agent can see:
+- **What you did** — clicks, navigation, form submissions, input
+- **What happened as a result** — errors, network calls, page changes, performance
+- **The relationship** — why something broke and what action caused it
 
-## What DevTrace Does
+Simple on/off control. All data stays local. No cloud dependency.
 
-DevTrace watches Chrome tabs and captures:
+Includes a **Claude Code skill** (`/devtrace`) for seamless AI integration.
 
-- **Console logs, warnings, and errors** — all console output
-- **Runtime exceptions** — JavaScript errors thrown on the page
-- **Network activity** — HTTP requests and responses with status codes
-- **Page state** — URL, title, and basic page snapshot
-- **Session summaries** — AI-readable JSON with the current browser state
+## Core Purpose
 
-All data is written to local files in a timestamped session directory, making it easy for AI agents (or humans) to inspect what happened in the browser without relying on manual DevTools export.
+When debugging or testing:
+1. **Start recording:** `devtrace start`
+2. **Click around, interact, test** — the AI is watching
+3. **Stop recording:** `devtrace stop`
+4. **Ask the AI:** "What happened when I clicked that button?" or "What did I do wrong?"
+5. **Get insights:** The AI analyzes the recorded activity, errors, and results to explain what happened
+
+The AI can see the complete picture of your actions and their consequences, making debugging faster and more accurate.
+
+## What DevTrace Captures
+
+**User Actions:**
+- Page navigation and URL changes
+- Clicks and form submissions
+- Input events (what was typed)
+- Search queries and parameters
+
+**Browser Results:**
+- Console logs, warnings, errors
+- Network requests and responses (including body/headers)
+- Page title and content changes
+- Performance metrics
+
+**Error Context:**
+- JavaScript exceptions
+- Network failures
+- Resource load issues
+- Causation chain (what action led to what error)
+
+All data is written to local files in a timestamped session directory.
 
 ## Installation
 
