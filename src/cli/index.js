@@ -194,14 +194,14 @@ Examples:
 })();
 
 function printMinimalHelp() {
-  console.log(`Usage: devtrace [cmd] [optional: flags] [args]
+  console.log(`Usage: devtrace [cmd] [options]
 
-  devtrace setup              Configure DevTrace (interactive walkthrough)
-  devtrace start              Start DevTrace (supports --new, --force, --auto-port, custom ports)
-  devtrace stop               Stop the running DevTrace service
-  devtrace open              Open the latest session in a browser
-  devtrace inspect            Inspect session state
-  devtrace tail               Follow console or network logs in real-time
-  devtrace skill              Manage Claude skill (install, status, help)
-  devtrace help               Show this help message`);
+  devtrace setup                      Configure DevTrace (interactive walkthrough)
+  devtrace start [options]            Start DevTrace (--new, --force, --auto-port, ports)
+  devtrace stop [ports]               Stop the running DevTrace service
+  devtrace open                       Open the latest session in a browser
+  devtrace inspect [session]          Inspect session state
+  devtrace tail [console|network]     Follow logs in real-time
+  devtrace skill [install|status|help] Manage Claude skill
+  devtrace help [cmd]                 Show detailed help`);
 }

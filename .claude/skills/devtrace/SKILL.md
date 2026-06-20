@@ -114,8 +114,7 @@ Sessions are stored in `./sessions/latest/`:
 
 | Command | Purpose |
 |---------|---------|
-| `devtrace tail console` | Stream console messages/errors in real-time |
-| `devtrace tail network` | Stream network requests in real-time |
+| `devtrace tail [console\|network]` | Stream console messages/errors or network requests in real-time |
 | `devtrace setup` | Configure DevTrace with interactive walkthrough |
 | `devtrace skill` | Install or check Claude skill status |
 
