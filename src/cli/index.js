@@ -1,5 +1,6 @@
 import { startCommand } from './start.js';
 import { stopCommand } from './stop.js';
+import { statusCommand } from './status.js';
 import { openCommand } from './open.js';
 import { inspectCommand } from './inspect.js';
 import { tailCommand } from './tail.js';
@@ -75,6 +76,23 @@ Options:
 Examples:
   devtrace stop                     Stop default service
   devtrace stop 9223 3334           Stop custom port service`,
+
+  status: `devtrace status - Check if DevTrace is running
+
+Description:
+  Shows the current status of DevTrace services.
+  Displays whether the Chrome DevTools Protocol and API server are running.
+
+Usage:
+  devtrace status [options]
+
+Options:
+  [port] [port]      Check custom ports
+                     Default: 9222 3333
+
+Examples:
+  devtrace status                   Check default service status
+  devtrace status 9223 3334         Check custom port service status`,
 
   open: `devtrace open - Open the latest session in browser
 
@@ -227,6 +245,9 @@ Examples:
       case 'stop':
         await stopCommand(args);
         break;
+      case 'status':
+        await statusCommand(args);
+        break;
       case 'open':
         await openCommand(args);
         break;
@@ -270,6 +291,7 @@ function printMinimalHelp() {
   devtrace setup                        Configure DevTrace (interactive walkthrough)
   devtrace start [options]              Start DevTrace (--new, --force, --auto-port, ports)
   devtrace stop [ports]                 Stop the running DevTrace service
+  devtrace status [ports]               Check if DevTrace is running
   devtrace open                         Open the latest session in a browser
   devtrace inspect [session]            Inspect session state
   devtrace tail [console|network]       Follow logs in real-time
