@@ -15,7 +15,6 @@ When you click around, submit forms, or navigate:
 - **I see what happened** — errors, network calls, page changes, performance
 - **I see the connection** — which action caused which error or result
 
-All data stays local. No cloud. No privacy concerns.
 
 ## The Simple Workflow
 

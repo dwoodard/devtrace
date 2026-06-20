@@ -4,6 +4,8 @@ import { setupConsoleCapture } from '../capture/consoleCapture.js';
 import { setupNetworkCapture } from '../capture/networkCapture.js';
 import { setupErrorCapture } from '../capture/errorCapture.js';
 import { setupPageCapture, capturePageSnapshot } from '../capture/pageSnapshot.js';
+import { setupActionCapture } from '../capture/actionCapture.js';
+import { PageMetadataCapture } from '../capture/pageMetadataCapture.js';
 import { JsonlWriter } from '../storage/jsonlWriter.js';
 import { CurrentStateWriter } from '../storage/currentStateWriter.js';
 import chalk from 'chalk';
@@ -18,6 +20,8 @@ export async function observerLoop(chrome, session, port) {
   const networkWriter = new JsonlWriter(`${session.path}/network.jsonl`);
   const errorWriter = new JsonlWriter(`${session.path}/errors.jsonl`);
   const eventWriter = new JsonlWriter(`${session.path}/events.jsonl`);
+  const actionWriter = new JsonlWriter(`${session.path}/actions.jsonl`);
+  const metadataWriter = new JsonlWriter(`${session.path}/metadata.jsonl`);
   const stateWriter = new CurrentStateWriter(session.path, session.id);
 
   const attachedTargets = new Map();
@@ -36,6 +40,8 @@ export async function observerLoop(chrome, session, port) {
     await networkWriter.close();
     await errorWriter.close();
     await eventWriter.close();
+    await actionWriter.close();
+    await metadataWriter.close();
   };
 
   process.on('SIGINT', async () => {
@@ -100,6 +106,29 @@ export async function observerLoop(chrome, session, port) {
           stateWriter.setPageSnapshot(change.snapshot);
         }
       });
+
+      // Setup action capture (navigation, form submissions, clicks)
+      setupActionCapture(client, (action) => {
+        actionWriter.append(action);
+        stateWriter.addAction(action);
+        eventWriter.append({ type: 'action', ...action });
+      });
+
+      // Setup metadata capture (page title, URL params, content snapshots)
+      const metadataCapture = new PageMetadataCapture(client, (metadata) => {
+        metadataWriter.append(metadata);
+        eventWriter.append({ type: 'metadata', ...metadata });
+
+        // If it's a search query, track it
+        if (metadata.searchQuery) {
+          stateWriter.setSearchQuery(metadata.searchQuery);
+        }
+      });
+
+      // Capture initial page content
+      setTimeout(async () => {
+        await metadataCapture.capturePageContent();
+      }, 2000);
 
       // Get initial page title
       try {

@@ -12,15 +12,18 @@ export class CurrentStateWriter {
       activeUrl: '',
       title: '',
       lastNavigation: now,
+      lastSearchQuery: null,
       summary: {
         consoleErrors: 0,
         consoleWarnings: 0,
         failedRequests: 0,
         lastError: null,
+        actions: 0,
       },
       console: [],
       network: [],
       errors: [],
+      actions: [],
       pageSnapshot: {
         text: '',
         buttons: [],
@@ -75,6 +78,18 @@ export class CurrentStateWriter {
 
   setPageSnapshot(snapshot) {
     this.state.pageSnapshot = snapshot;
+    this.writeState();
+  }
+
+  setSearchQuery(query) {
+    this.state.lastSearchQuery = query;
+    this.writeState();
+  }
+
+  addAction(action) {
+    this.state.actions.push(action);
+    this.state.actions = this.state.actions.slice(-20); // Keep last 20
+    this.state.summary.actions += 1;
     this.writeState();
   }
 
