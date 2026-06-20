@@ -43,7 +43,10 @@ Press `Ctrl+C` to stop.
 ## Inspect Results
 
 ```bash
-# See a summary of the latest session
+# Quick view of latest activity (compact, token-friendly)
+devtrace see
+
+# Detailed summary of the latest session
 devtrace inspect latest
 
 # Follow console logs in real-time
@@ -51,6 +54,25 @@ devtrace tail console
 
 # Follow network requests in real-time
 devtrace tail network
+```
+
+### Quick View with Filters
+
+```bash
+# Show last 30 seconds of activity
+devtrace see --ago=30
+
+# Show only specific domain
+devtrace see --domain=api.example.com
+
+# Show only errors and warnings
+devtrace see --errors-only
+
+# Get structured JSON output
+devtrace see --json
+
+# Combine filters
+devtrace see --ago=10 --domain=api.example.com
 ```
 
 ## Session Files

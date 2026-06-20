@@ -4,12 +4,70 @@ Real-world examples of how to use DevTrace for debugging, testing, and AI agent 
 
 ## Table of Contents
 
-1. [Basic Usage](#basic-usage)
-2. [Debugging a Web App](#debugging-a-web-app)
-3. [Capturing Console Errors](#capturing-console-errors)
-4. [Monitoring Network Activity](#monitoring-network-activity)
-5. [AI Agent Workflows](#ai-agent-workflows)
-6. [Integration with Testing](#integration-with-testing)
+1. [Quick View of Activity](#quick-view-of-activity)
+2. [Basic Usage](#basic-usage)
+3. [Debugging a Web App](#debugging-a-web-app)
+4. [Capturing Console Errors](#capturing-console-errors)
+5. [Monitoring Network Activity](#monitoring-network-activity)
+6. [AI Agent Workflows](#ai-agent-workflows)
+7. [Integration with Testing](#integration-with-testing)
+
+---
+
+## Quick View of Activity
+
+### Example 0: See What Just Happened
+
+The fastest way to debug—get a clean summary of recent activity:
+
+```bash
+# Terminal 1: Start observing
+devtrace start
+
+# (In Chrome, do some stuff—navigate, click buttons, trigger errors)
+# (Leave it running)
+
+# Terminal 2: Quick view of what just happened
+devtrace see
+```
+
+Output:
+```
+[SUMMARY]
+Logs: 12 | Warns: 0 | Errors: 0 | Network: 8 (8 OK, 0 failed) | Time: entire session
+
+[TIMELINE]
+13:16:51.698  ✓ GET http://api.example.com/projects (200, 147ms)
+13:16:51.710  ✓ Page load complete
+13:16:52.001  ✓ POST http://api.example.com/submit (201, 156ms)
+13:16:52.410  ✓ Navigation to /success
+```
+
+#### Filter by Time or Domain
+
+```bash
+# Last 30 seconds only
+devtrace see --ago=30
+
+# Only network traffic to specific domain
+devtrace see --domain=api.example.com
+
+# Last 10 seconds from a specific domain
+devtrace see --ago=10 --domain=api.example.com
+
+# Only show errors and warnings
+devtrace see --errors-only
+
+# Get JSON for programmatic use
+devtrace see --json
+```
+
+**Why use `devtrace see`?**
+- Fast and focused (no noise)
+- Errors shown first
+- Timestamps and durations
+- Compact, token-friendly output for AI agents
+- Perfect for "did I break something?" checks
 
 ---
 
