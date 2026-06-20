@@ -3,6 +3,7 @@ import { stopCommand } from './stop.js';
 import { statusCommand } from './status.js';
 import { openCommand } from './open.js';
 import { inspectCommand } from './inspect.js';
+import { seeCommand } from './see.js';
 import { tailCommand } from './tail.js';
 import { skillCommand } from './skill.js';
 import { setupCommand } from './setup.js';
@@ -134,6 +135,37 @@ Examples:
   devtrace inspect latest --changes Show smart changes summary
   devtrace inspect 2026-06-20-15-22-13 --changes Show changes for specific session`,
 
+  see: `devtrace see - Quick view of latest activity
+
+Description:
+  Shows a clean, compact summary of the latest session activity.
+  Displays errors first, then timeline of logs and network requests.
+  Perfect for quick debugging while actively developing.
+
+Usage:
+  devtrace see [--ago=SECONDS] [--domain=DOMAIN] [--errors-only] [--json]
+
+Options:
+  [--ago=N]          Show activity from last N seconds (default: entire session)
+  [--domain=DOMAIN]  Filter to specific domain (e.g., papertrail.test, chrome-extension://...)
+  [--errors-only]    Show only errors and warnings
+  [--json]           Output as machine-readable JSON
+  [--live]           Stream in real-time (shows latest 60s window)
+
+Output Format:
+  [SUMMARY] - Error/log/network counts and time range
+  [ERRORS]  - Errors and warnings (if any)
+  [TIMELINE] - Chronological list of logs and network requests
+
+Examples:
+  devtrace see                              Show everything in session
+  devtrace see --ago=30                     Show last 30 seconds
+  devtrace see --domain=papertrail.test     Show only papertrail.test traffic
+  devtrace see --ago=10 --domain=papertrail.test  Last 10s from papertrail.test
+  devtrace see --errors-only                Show only errors and warnings
+  devtrace see --json                       Get structured JSON output
+  devtrace see --live                       Stream real-time activity`,
+
   tail: `devtrace tail - Follow real-time browser logs
 
 Description:
@@ -254,6 +286,9 @@ Examples:
       case 'inspect':
         await inspectCommand(args);
         break;
+      case 'see':
+        await seeCommand(args);
+        break;
       case 'tail':
         await tailCommand(args);
         break;
@@ -294,6 +329,7 @@ function printMinimalHelp() {
   devtrace status [ports]               Check if DevTrace is running
   devtrace open                         Open the latest session in a browser
   devtrace inspect [session]            Inspect session state
+  devtrace see [options]                Quick view of latest activity (--ago, --domain, --json)
   devtrace tail [console|network]       Follow logs in real-time
   devtrace clean [--force]              Delete all sessions (--force to confirm)
   devtrace skill [install|status|help]  Manage Claude skill
