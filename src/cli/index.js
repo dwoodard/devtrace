@@ -110,17 +110,51 @@ Examples:
 
 Description:
   Streams real-time logs from your connected Chrome browser to the terminal.
+  Shows events as they happen while you interact with your app.
 
 Usage:
   devtrace tail [type]
 
 Types:
-  console            Stream console.log, console.error, console.warn
-  network            Stream HTTP requests and responses
+  console            All browser console output (logs, warnings, errors)
+  network            All HTTP requests (APIs, resources, failures)
+
+What Gets Captured:
+  console:
+    • console.log(), console.warn(), console.error() messages
+    • JavaScript exceptions and stack traces
+    • Extension console output
+
+  network:
+    • API calls from your application
+    • Page resource loads (images, scripts, stylesheets)
+    • Background requests and webhooks
+    • Failed requests with status/error details
+    • Requests from extensions or content scripts
+
+Output Format:
+  console:  [level] message text
+            Example: error: Cannot read properties of undefined
+
+  network:  [STATUS] METHOD URL
+            Example: 200 GET https://api.example.com/users
+            Example: 404 POST https://api.example.com/missing-endpoint
+
+When Data Appears:
+  • Events stream in real-time as they occur in Chrome
+  • Network: when response is received or request fails
+  • Console: immediately when logged or error occurs
+  • Updates checked every 500ms
 
 Examples:
-  devtrace tail console             Follow console logs
-  devtrace tail network             Follow network requests`,
+  devtrace tail console             Watch console output while you interact
+  devtrace tail network             See all API calls and resource loads
+
+Use Cases:
+  • Debugging API failures (see failed requests immediately)
+  • Verifying API responses and request payloads
+  • Catching console errors as they happen
+  • Tracking background processes and webhooks`,
 
   skill: `devtrace skill - Manage Claude DevTrace skill
 

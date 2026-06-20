@@ -399,12 +399,40 @@ When you use DevTrace:
 - Check network if debugging API requests from your extension
 - The `inspect` command gives you the full picture without needing to dive into logs
 
+## Understanding `devtrace tail network`
+
+**What it captures:**
+- ALL HTTP requests from your entire Chrome instance (not just the current page)
+- Includes: API calls, page resources (images, scripts, stylesheets), webhooks, background requests, extension requests
+- Shows: status code, HTTP method (GET/POST/etc.), and URL
+
+**When data appears:**
+- Immediately when a response is received or request fails
+- Includes both successful requests (200 OK) and failed ones (404, 500, etc.)
+- Anything happening in any tab or in the background
+
+**Example output:**
+```
+200 GET https://api.example.com/users
+200 POST https://api.example.com/save
+404 GET https://cdn.example.com/missing-image.png
+0 POST https://webhook.service.com/events     (failed request)
+```
+
+**Real-world scenario:**
+1. `devtrace start`
+2. Navigate to your app → see GET requests for page load
+3. Click a button → see POST request to your API
+4. API fails → see red 500 or 404 status immediately
+5. Form submits in background → see the network call instantly
+
 ## When to Use DevTrace
 
 Use DevTrace when:
 
 - **Reporting a bug** — Rather than describing what happened, capture it so we can see the actual error
 - **Verifying a fix** — After changes are made, we can confirm with real data that it works
+- **Debugging API issues** — Use `devtrace tail network` to see failed requests in real-time
 - **Debugging complex issues** — Instead of back-and-forth descriptions, we have the actual console logs, network requests, and page state
 - **Testing end-to-end workflows** — Capture the full flow to ensure all parts work together
 - **Documenting what went wrong** — Sessions provide concrete evidence of issues, making solutions more reliable
