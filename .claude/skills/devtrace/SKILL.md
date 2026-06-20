@@ -21,8 +21,6 @@ DevTrace captures:
 - **Browser events** (console, network, errors)
 - **The timeline** (what happened when)
 
-All data stays local. No cloud. No privacy concerns.
-
 ## The Simple Workflow
 
 ```

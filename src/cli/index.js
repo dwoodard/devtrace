@@ -5,6 +5,7 @@ import { inspectCommand } from './inspect.js';
 import { tailCommand } from './tail.js';
 import { skillCommand } from './skill.js';
 import { setupCommand } from './setup.js';
+import { cleanCommand } from './clean.js';
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
@@ -170,6 +171,24 @@ Use Cases:
   • Catching console errors and network problems as they happen
   • Tracking background processes and webhooks`,
 
+  clean: `devtrace clean - Delete all sessions
+
+Description:
+  Remove all recorded sessions and their data.
+  Useful for starting fresh or cleaning up disk space.
+
+Usage:
+  devtrace clean [--force]
+
+Arguments:
+  --force            Confirm deletion (required for safety)
+
+Examples:
+  devtrace clean                     Show sessions without deleting
+  devtrace clean --force             Delete all sessions permanently
+
+Warning: This cannot be undone. All session data will be lost.`,
+
   skill: `devtrace skill - Manage Claude DevTrace skill
 
 Description:
@@ -223,6 +242,10 @@ Examples:
       case 'setup':
         await setupCommand();
         break;
+      case 'clean':
+        await cleanCommand(args);
+        process.exit(0);
+        break;
       case 'help':
       case '-h':
       case '--help':
@@ -250,6 +273,7 @@ function printMinimalHelp() {
   devtrace open                         Open the latest session in a browser
   devtrace inspect [session]            Inspect session state
   devtrace tail [console|network]       Follow logs in real-time
+  devtrace clean [--force]              Delete all sessions (--force to confirm)
   devtrace skill [install|status|help]  Manage Claude skill
   devtrace help [cmd]                   Show detailed help`);
 }
