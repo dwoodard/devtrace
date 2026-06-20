@@ -196,12 +196,12 @@ Examples:
 function printMinimalHelp() {
   console.log(`Usage: devtrace [cmd] [options]
 
-  devtrace setup                      Configure DevTrace (interactive walkthrough)
-  devtrace start [options]            Start DevTrace (--new, --force, --auto-port, ports)
-  devtrace stop [ports]               Stop the running DevTrace service
-  devtrace open                       Open the latest session in a browser
-  devtrace inspect [session]          Inspect session state
-  devtrace tail [console|network]     Follow logs in real-time
-  devtrace skill [install|status|help] Manage Claude skill
-  devtrace help [cmd]                 Show detailed help`);
+  devtrace setup                        Configure DevTrace (interactive walkthrough)
+  devtrace start [options]              Start DevTrace (--new, --force, --auto-port, ports)
+  devtrace stop [ports]                 Stop the running DevTrace service
+  devtrace open                         Open the latest session in a browser
+  devtrace inspect [session]            Inspect session state
+  devtrace tail [console|network]       Follow logs in real-time
+  devtrace skill [install|status|help]  Manage Claude skill
+  devtrace help [cmd]                   Show detailed help`);
 }
