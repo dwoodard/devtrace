@@ -35,14 +35,13 @@ class SessionManager {
 
   getSession(sessionId) {
     if (sessionId === 'latest') {
-      const latestPath = path.join(sessionsDir, 'latest');
-      if (fs.existsSync(latestPath)) {
-        return {
-          id: 'latest',
-          path: fs.realpathSync(latestPath),
-        };
-      }
-      return null;
+      // Find the most recent valid session
+      const recentSession = this.getMostRecentSession();
+
+      // Repair the symlink if needed
+      this.repairLatestSymlink(recentSession);
+
+      return recentSession;
     }
 
     const sessionPath = path.join(sessionsDir, sessionId);
@@ -54,6 +53,55 @@ class SessionManager {
     }
 
     return null;
+  }
+
+  getMostRecentSession() {
+    const sessions = this.listSessions();
+    if (sessions.length === 0) {
+      return null;
+    }
+    const mostRecent = sessions[0];
+    const sessionPath = path.join(sessionsDir, mostRecent);
+    return {
+      id: 'latest',
+      path: sessionPath,
+    };
+  }
+
+  repairLatestSymlink(recentSession) {
+    const latestPath = path.join(sessionsDir, 'latest');
+
+    try {
+      const stats = fs.lstatSync(latestPath);
+      if (stats.isSymbolicLink()) {
+        // Check if symlink target exists
+        try {
+          fs.realpathSync(latestPath);
+          // Target exists, symlink is valid
+          return;
+        } catch (err) {
+          // Symlink is broken, remove it
+          fs.unlinkSync(latestPath);
+        }
+      }
+    } catch (err) {
+      // Symlink doesn't exist or we can't stat it, that's fine
+    }
+
+    // Recreate symlink to point to the most recent valid session
+    if (recentSession) {
+      try {
+        // Make sure there's no leftover file/link
+        try {
+          fs.unlinkSync(latestPath);
+        } catch (e) {
+          // Ignore
+        }
+        fs.symlinkSync(recentSession.path, latestPath);
+      } catch (err) {
+        // Symlink may not work on all systems, that's okay
+      }
+    }
   }
 
   listSessions() {
