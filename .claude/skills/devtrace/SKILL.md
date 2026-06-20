@@ -97,28 +97,47 @@ Sessions are stored in `./sessions/latest/`:
 
 | Command | Purpose |
 |---------|---------|
-| `/devtrace status` | Check if DevTrace is running (run this first) |
-| `/devtrace start` | Launch Chrome and begin recording all browser activity |
-| `/devtrace inspect` | View summary of the latest session (run after interacting with your app) |
-| `/devtrace stop` | Stop recording and close the session |
+| `devtrace start` | Launch Chrome and begin recording all browser activity |
+| `devtrace inspect` | View summary of the latest session (run after interacting with your app) |
+| `devtrace stop` | Stop recording and close the session |
+| `devtrace open` | Open the latest session in your default browser |
 
 ### Secondary Tools (Use Only When Needed)
 
 | Command | Purpose |
 |---------|---------|
-| `/devtrace console` | Show console messages/errors from latest session (only if you need to inspect logs) |
-| `/devtrace network` | Show network requests from latest session (only if you need to check API calls) |
-| `/devtrace api` | Query the local API for full structured data as JSON |
-| `/devtrace files` | Show the files in the latest session directory |
+| `devtrace tail console` | Stream console messages/errors in real-time |
+| `devtrace tail network` | Stream network requests in real-time |
+| `devtrace setup` | Configure DevTrace with interactive walkthrough |
+| `devtrace skill` | Install or check Claude skill status |
+
+### Getting Help
+
+For any command, use the `-h` flag to see detailed help:
+
+```bash
+devtrace -h                        # Show all available commands
+devtrace start -h                  # Show detailed help for start command
+devtrace tail -h                   # Show detailed help for tail command
+devtrace inspect -h                # Show detailed help for inspect command
+devtrace open -h                   # Show detailed help for open command
+devtrace stop -h                   # Show detailed help for stop command
+devtrace setup -h                  # Show detailed help for setup command
+devtrace skill -h                  # Show detailed help for skill command
+```
+
+Each command's help includes:
+- Detailed description of what it does
+- Usage syntax with all available options
+- Real-world examples
 
 ## Real-World Examples
 
 ### Example 1: Quick Browser Debugging (Typical Workflow)
 
 ```bash
-# 1. Check status and start recording
-/devtrace status
-/devtrace start
+# 1. Start recording
+devtrace start
 
 # 2. (In Chrome) Navigate to your app and trigger the behavior
 #    - Load a page
@@ -127,14 +146,20 @@ Sessions are stored in `./sessions/latest/`:
 #    - Let requests complete
 
 # 3. See what happened
-/devtrace inspect
+devtrace inspect
 
 # 4. If needed, dig into specifics
-/devtrace console    # Only if looking for console errors
-/devtrace network    # Only if checking HTTP requests
+devtrace tail console    # Stream console errors as they happen
+devtrace tail network    # Stream network requests as they happen
 
-# 5. Stop when done
-/devtrace stop
+# 5. Open session in browser for full details
+devtrace open
+
+# 6. Stop when done
+devtrace stop
+
+# Need help with any command?
+devtrace start -h        # Get detailed help for start command
 ```
 
 ### Example 2: Chrome Extension Debugging
@@ -146,13 +171,18 @@ For Chrome extension development (like google-maps-content.js), DevTrace capture
 - Network requests from the extension
 
 ```bash
-/devtrace start
+devtrace start --new
 
 # (In Chrome) Navigate to a page and trigger your extension
 # Check the extension popup, content script behavior, etc.
 
-/devtrace inspect      # See overall session
-/devtrace console      # Check for extension errors
+devtrace inspect               # See overall session
+devtrace tail console          # Stream console errors from extension
+devtrace open                  # View full session in browser
+devtrace stop                  # Stop when done
+
+# Need help with options?
+devtrace start -h              # See all start command options
 ```
 
 ### Example 3: AI-Driven Session Inspection
@@ -160,7 +190,7 @@ For Chrome extension development (like google-maps-content.js), DevTrace capture
 When Claude Code needs to analyze what happened:
 
 ```bash
-/devtrace start
+devtrace start
 
 # (Trigger behavior in Chrome)
 
@@ -172,6 +202,14 @@ curl http://localhost:3333/latest | jq .
 # - Check if network requests succeeded
 # - Understand page structure and state
 # - Review full event history
+
+# Stream logs in real-time if debugging
+devtrace tail console
+devtrace tail network
+
+# Get help on any step
+devtrace inspect -h             # See inspection options
+devtrace tail -h                # See tail command options
 ```
 
 ## Session Structure
@@ -319,22 +357,24 @@ Example agent workflow:
 
 ## The Recommended Workflow
 
-When you invoke `/devtrace`:
+When you use DevTrace:
 
-1. **First**: Run `/devtrace status` to check if it's already running
-2. **If not running**: Run `/devtrace start` to launch Chrome and begin recording
-3. **Then**: Go to Chrome and interact with your app (navigate, click, trigger behavior)
-4. **When done**: Run `/devtrace inspect` to see what was captured
-5. **Only if needed**: 
-   - Run `/devtrace console` to check logs/errors
-   - Run `/devtrace network` to check HTTP requests
-6. **Finally**: Run `/devtrace stop` to stop recording
+1. **Start recording**: Run `devtrace start` to launch Chrome and begin recording
+2. **Interact with your app**: In Chrome, navigate, click, and trigger the behavior you want to debug
+3. **Inspect the session**: Run `devtrace inspect` to see what was captured
+4. **Dig deeper if needed**: 
+   - Run `devtrace tail console` to stream console logs/errors
+   - Run `devtrace tail network` to stream network requests
+   - Run `devtrace open` to view the full session in your browser
+5. **Stop recording**: Run `devtrace stop` to stop recording
+6. **Get help anytime**: Use `-h` flag on any command (e.g., `devtrace start -h`) for detailed help
 
 ## When Should I Check Console/Network?
 
-- **Console** — Only if you saw errors in the browser or want to verify specific log messages
-- **Network** — Only if you need to verify API calls, request payloads, or response status codes
-- **Inspector** — Usually enough; gives you the summary automatically
+- **Console** — Run `devtrace tail console` only if you saw errors in the browser or want to verify specific log messages
+- **Network** — Run `devtrace tail network` only if you need to verify API calls, request payloads, or response status codes
+- **Inspector** — Run `devtrace inspect` usually enough; gives you the summary automatically
+- **Help** — Run `devtrace tail -h` or `devtrace inspect -h` if you're unsure about options
 
 ## Project-Specific Guidance
 
