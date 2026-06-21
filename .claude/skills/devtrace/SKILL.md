@@ -71,6 +71,17 @@ You get: "I see you clicked X, which triggered API call Y, which failed with err
 
 The AI sees the complete picture and can debug faster.
 
+## Starting Fresh (Without Losing History)
+
+To stop the current recording and start a new clean session while **preserving all previous sessions** for later review:
+
+```bash
+devtrace stop          # Stops current recording (preserves it)
+devtrace start --new & # Starts fresh new recording
+```
+
+This is the recommended workflow. Your old sessions stay intact for Claude to review if needed.
+
 ## Session Analysis Tips
 
 - Use `devtrace see` for a quick, compact view of latest activity (perfect for AI agents)
@@ -81,3 +92,13 @@ The AI sees the complete picture and can debug faster.
 - Use `devtrace see --json` to get machine-readable output for analysis
 - The `latest` symlink auto-repairs itself if it points to a deleted session
 - Session data stored in `~/.devtrace/sessions/[timestamp]/` with: actions.jsonl, console.jsonl, network.jsonl, errors.jsonl, etc.
+
+## ⚠️ Deleting Sessions
+
+**Only use `devtrace clean --force` if you truly want to delete all sessions.** This is destructive and permanent.
+
+```bash
+devtrace clean --force # ⚠️ WARNING: Deletes ALL sessions permanently
+```
+
+For normal workflow, just use `devtrace stop` + `devtrace start --new &` instead.

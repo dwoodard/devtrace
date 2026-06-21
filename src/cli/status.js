@@ -24,7 +24,7 @@ export async function statusCommand(args) {
   if (overallStatus) {
     console.log(chalk.gray('To stop: devtrace stop'));
   } else {
-    console.log(chalk.gray('To start: devtrace start --new &'));
+    console.log(chalk.gray('To start: devtrace start'));
   }
 
   console.log(chalk.cyan(''));

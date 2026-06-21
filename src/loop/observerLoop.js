@@ -172,9 +172,13 @@ export async function observerLoop(chrome, session, port) {
         chromeNotFoundWarningShown = false;
       }
 
+      console.log(`[DevTrace] Discovered ${targets.length} targets`);
       for (const target of targets) {
-        // Only attach to page targets, not workers or other types
-        if (target.type === 'page' && target.webSocketDebuggerUrl) {
+        console.log(`  - Type: ${target.type}, URL: ${target.url}`);
+        // Attach to page targets and other debuggable targets (including extensions)
+        const debuggableTypes = ['page', 'background_page', 'webview'];
+        if (debuggableTypes.includes(target.type) && target.webSocketDebuggerUrl) {
+          console.log(`  → Attaching to ${target.type}`);
           await attachToTarget(target.id, target.url);
         }
       }

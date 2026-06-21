@@ -54,4 +54,5 @@ export async function stopCommand(args) {
   }
 
   console.log(chalk.green('✓ DevTrace stopped\n'));
+  process.exit(0);
 }

@@ -4,6 +4,27 @@ import { startLocalApi } from '../server/localApi.js';
 import { observerLoop } from '../loop/observerLoop.js';
 import chalk from 'chalk';
 import { checkPort, findFreePort, killProcessOnPort } from '../utils/portUtils.js';
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+import { spawn } from 'child_process';
+
+// Load config from ~/.devtrace/config
+function loadDevtraceConfig() {
+  const configPath = path.join(os.homedir(), '.devtrace', 'config.json');
+  if (fs.existsSync(configPath)) {
+    try {
+      return JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    } catch (err) {
+      console.warn(chalk.yellow(`Warning: Could not parse ${configPath}`));
+    }
+  }
+  return {};
+}
+
+const devtraceConfig = loadDevtraceConfig();
+process.env.DEVTRACE_PORT = process.env.DEVTRACE_PORT || devtraceConfig.port;
+process.env.DEVTRACE_API_PORT = process.env.DEVTRACE_API_PORT || devtraceConfig.apiPort;
 
 function validatePort(port, name) {
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
@@ -13,47 +34,83 @@ function validatePort(port, name) {
   return port;
 }
 
+async function checkChromeWithDebugging(port) {
+  try {
+    const response = await fetch(`http://localhost:${port}/json`, { timeout: 2000 });
+    if (response.ok) {
+      const targets = await response.json();
+      return { found: true, targetCount: targets.length };
+    }
+  } catch (err) {
+    // Chrome not responding on this port
+  }
+  return { found: false, targetCount: 0 };
+}
+
+
 export async function startCommand(args) {
-  let port = parseInt(args[0]) || 9222;
-  let apiPort = parseInt(args[1]) || 3333;
+  // Auto-spawn in background if running in TTY and not already backgrounded
+  const showLogs = args.includes('--log');
+
+  if (process.stdin.isTTY && !process.env.DEVTRACE_BACKGROUND && !showLogs) {
+    const child = spawn(process.argv[0], process.argv.slice(1), {
+      detached: true,
+      stdio: 'ignore',
+      env: { ...process.env, DEVTRACE_BACKGROUND: 'true' },
+    });
+
+    child.unref();
+
+    console.log(chalk.green('✓ DevTrace started in background'));
+    console.log(chalk.gray('  Run: devtrace status'));
+    console.log(chalk.gray('  Run: devtrace see'));
+    console.log(chalk.gray('  Run: devtrace stop\n'));
+    process.exit(0);
+  }
+
+  let port = parseInt(process.env.DEVTRACE_PORT) || 9222;
+  let apiPort = parseInt(process.env.DEVTRACE_API_PORT) || 3333;
 
   validatePort(port, 'Chrome DevTools port');
   validatePort(apiPort, 'API port');
 
   const autoPort = args.includes('--auto-port');
   const force = args.includes('--force');
-  // Default to existing Chrome, use --new to launch a fresh instance
-  const launchNew = args.includes('--new') || args.includes('--fresh');
-  const useExisting = !launchNew; // Existing is now the default
+  const useExisting = args.includes('--existing');
+  let launchNew = !useExisting;
 
   console.log(chalk.cyan('\n🔍 DevTrace - Browser Observer\n'));
 
-  // If --existing flag is set, try to connect to existing Chrome
-  if (useExisting) {
-    console.log(chalk.yellow('Looking for existing Chrome browser...\n'));
-    // We'll skip Chrome port checking since we're not launching our own
-    console.log(`Chrome DevTools Protocol: localhost:${port}`);
-    console.log(`Local API: http://localhost:${apiPort}\n`);
+  // Check if Chrome is already running
+  console.log('Checking for running Chrome...\n');
+  let chromeIsRunning = await checkChromeWithDebugging(port);
+
+  if (chromeIsRunning.found) {
+    console.log(chalk.green(`✓ Found Chrome running on port ${port}`));
+    console.log(chalk.yellow(`  Closing and relaunching with debugging enabled...\n`));
   } else {
-    // Check if ports are available before launching
-    console.log('Checking ports...');
+    console.log(chalk.yellow(`✗ No Chrome detected on port ${port}\n`));
+    if (!useExisting) {
+      console.log(chalk.cyan('Will launch fresh Chrome...\n'));
+    }
   }
+
+  console.log(`Chrome DevTools Protocol: localhost:${port}`);
+  console.log(`Local API: http://localhost:${apiPort}\n`);
 
   let apiPortAvailable = await checkPort(apiPort);
   let chromePortAvailable = useExisting ? true : await checkPort(port);
 
-  // If force is enabled and ports are in use, kill existing processes
-  if (force && (!apiPortAvailable || !chromePortAvailable)) {
-    console.log(chalk.yellow('Force mode enabled, killing existing processes...\n'));
-
+  // If launching new Chrome or force is enabled, kill processes on the ports
+  if (launchNew || force) {
     if (!chromePortAvailable) {
-      console.log(chalk.yellow(`  Killing process on port ${port}...`));
+      console.log(chalk.yellow(`Cleaning up Chrome on port ${port}...`));
       await killProcessOnPort(port);
       chromePortAvailable = true;
     }
 
     if (!apiPortAvailable) {
-      console.log(chalk.yellow(`  Killing process on port ${apiPort}...`));
+      console.log(chalk.yellow(`Cleaning up API server on port ${apiPort}...`));
       await killProcessOnPort(apiPort);
       apiPortAvailable = true;
     }
@@ -126,8 +183,8 @@ export async function startCommand(args) {
     if (useExisting) {
       console.log(chalk.cyan('Connecting to existing Chrome browser...\n'));
       console.log(chalk.blue('If Chrome is not already running, start it in a new terminal:\n'));
-      console.log(chalk.gray('  /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome \\'));
-      console.log(chalk.gray(`    --remote-debugging-port=${port}\n`));
+      console.log(chalk.gray(`  /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome \\ --remote-debugging-port=${port}`));
+
       // Don't launch Chrome, just use the port
       chrome = { kill: async () => {} }; // Dummy object for cleanup
       console.log(chalk.green('✓ Ready to observe your Chrome browser\n'));

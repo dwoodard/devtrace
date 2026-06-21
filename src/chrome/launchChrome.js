@@ -1,32 +1,30 @@
 import { launch } from 'chrome-launcher';
-import path from 'path';
-import os from 'os';
-import fs from 'fs';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 import { findChromiumBinary } from '../utils/chromeUtils.js';
-import { getEnv } from '../utils/envLoader.js';
+
+const execAsync = promisify(exec);
+
+async function killExistingChrome() {
+  try {
+    await execAsync('pkill -f "Google Chrome"');
+  } catch (err) {
+    // No Chrome running is fine
+  }
+}
 
 export async function launchChrome(port) {
-  const homeDir = os.homedir();
-
-  // Get profile from .env or use default temp profile
-  let profileDir = getEnv('DEVTRACE_CHROME_PROFILE');
-
-  if (!profileDir) {
-    // Use temporary profile if not configured
-    profileDir = path.join(homeDir, 'projects/devtrace/.chrome-profile');
-  }
-
-  // Ensure profile directory exists
-  fs.mkdirSync(profileDir, { recursive: true });
+  // Kill any existing Chrome processes to avoid conflicts
+  await killExistingChrome();
 
   const chromePath = findChromiumBinary();
   if (!chromePath) {
     throw new Error('Chrome/Chromium not found. Install Chrome or Chromium.');
   }
 
+  // Launch Chrome with debugging port only - Chrome will use its Default profile automatically
   const chrome = await launch({
     port,
-    userDataDir: profileDir,
     chromePath,
     chromeFlags: ['--no-sandbox'],
     startingUrl: 'about:blank',
